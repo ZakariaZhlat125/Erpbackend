@@ -50,4 +50,19 @@ abstract class BaseService
     {
         return $this->repository->exists($id);
     }
+
+    public function findByIds(array $ids, array $columns = ['*'], array $relations = []): Collection
+    {
+        return $this->repository->findByIds($ids, $columns, $relations);
+    }
+
+    public function updateMany(array $ids, array $data): int
+    {
+        return $this->repository->updateMany($ids, $data);
+    }
+
+    public function search(array $criteria, int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->repository->search($criteria, $perPage);
+    }
 }

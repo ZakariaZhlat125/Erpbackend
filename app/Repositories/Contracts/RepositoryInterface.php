@@ -23,4 +23,10 @@ interface RepositoryInterface
     public function deleteById(int $id): bool;
 
     public function exists(int $id): bool;
+
+    public function findByIds(array $ids, array $columns = ['*'], array $relations = []): Collection;
+
+    public function updateMany(array $ids, array $data): int;
+
+    public function search(array $criteria, int $perPage = 15): LengthAwarePaginator;
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('direction', ['inbound', 'outbound']);
             $table->enum('method', ['cash', 'bank_transfer', 'cheque', 'card', 'other']);
             $table->decimal('amount', 15, 2);
-            $table->string('currency_code', 3)->default('SAR');
+            $table->foreignId('currency_id')->nullable()->constrained('currencies')->nullOnDelete();
             $table->timestamp('paid_at');
             $table->string('reference', 100)->nullable();
             $table->text('notes')->nullable();

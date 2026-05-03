@@ -70,4 +70,104 @@ class ProjectController extends BaseApiController
 
         return $this->noContentResponse();
     }
+
+    public function addMember(int $id): JsonResponse
+    {
+        $project = $this->projectService->findById($id);
+
+        if (!$project) {
+            return $this->notFoundResponse();
+        }
+
+        // TODO: Validate member data
+        // TODO: Implement AddProjectMemberAction
+        // $memberData = request()->validate([...]);
+        // $member = $project->members()->create($memberData);
+
+        return $this->createdResponse(
+            ['message' => 'Add member functionality not implemented yet']
+        );
+    }
+
+    public function removeMember(int $projectId, int $userId): JsonResponse
+    {
+        $project = $this->projectService->findById($projectId);
+
+        if (!$project) {
+            return $this->notFoundResponse();
+        }
+
+        // TODO: Implement RemoveProjectMemberAction
+        // $project->members()->where('user_id', $userId)->delete();
+
+        return $this->noContentResponse();
+    }
+
+    public function dashboard(int $id): JsonResponse
+    {
+        try {
+            $dashboard = $this->projectService->getDashboard($id);
+
+            return $this->successResponse($dashboard, 'Project dashboard retrieved');
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 404);
+        }
+    }
+
+    public function statistics(): JsonResponse
+    {
+        $stats = $this->projectService->getStatistics();
+
+        return $this->successResponse($stats, 'Project statistics retrieved');
+    }
+
+    public function updateProgress(int $id): JsonResponse
+    {
+        $validated = request()->validate([
+            'progress_percent' => 'required|integer|min:0|max:100',
+        ]);
+
+        try {
+            $this->projectService->updateProgress($id, $validated['progress_percent']);
+            $project = $this->projectService->findById($id);
+
+            return $this->successResponse(
+                new ProjectResource($project),
+                'Project progress updated successfully'
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 400);
+        }
+    }
+
+    public function search(): JsonResponse
+    {
+        $criteria = request()->only([
+            'code_like',
+            'name_like',
+            'description_like',
+            'status',
+            'party_id',
+            'start_date_from',
+            'start_date_to',
+            'end_date_from',
+            'end_date_to',
+            'budget_amount_from',
+            'budget_amount_to',
+        ]);
+
+        $perPage = request()->integer('per_page', 15);
+        $results = $this->projectService->search($criteria, $perPage);
+
+        return $this->paginatedResponse($results);
+    }
+
+    public function export(): mixed
+    {
+        // TODO: Implement Excel export using Maatwebsite\Excel
+        // $projects = $this->projectService->getAll();
+        // return Excel::download(new ProjectsExport($projects), 'projects.xlsx');
+
+        return $this->errorResponse('Export functionality not implemented yet', 501);
+    }
 }

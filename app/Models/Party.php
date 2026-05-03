@@ -20,7 +20,7 @@ class Party extends Model
         'display_name',
         'legal_name',
         'tax_number',
-        'default_currency',
+        'currency_id',
         'notes',
         'is_active',
     ];
@@ -76,6 +76,11 @@ class Party extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
     }
 
     public function scopeActive($query)

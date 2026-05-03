@@ -10,12 +10,13 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('legal_name');
             $table->string('tax_number', 50)->unique();
-            $table->string('base_currency', 3)->default('SAR');
-            $table->string('timezone', 50)->default('Asia/Riyadh');
-            $table->string('locale', 10)->default('ar');
+            $table->foreignId('base_currency_id')->nullable()->constrained('currencies')->nullOnDelete();
+            $table->string('timezone', 50)->default('UTC');
+            $table->string('locale', 10)->default('en');
             $table->enum('status', ['active', 'suspended', 'inactive'])->default('active');
             $table->text('address')->nullable();
             $table->string('phone', 20)->nullable();

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Organization\BulkStoreOrganizationRequest;
 use App\Http\Requests\Organization\StoreOrganizationRequest;
 use App\Http\Requests\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\OrganizationResource;
 use App\Services\OrganizationService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class OrganizationController extends BaseApiController
 {
@@ -16,19 +18,40 @@ class OrganizationController extends BaseApiController
 
     public function index(): JsonResponse
     {
+
         $data = $this->organizationService->getPaginated(
             perPage: request()->integer('per_page', 15)
         );
-
         return $this->paginatedResponse($data);
     }
 
     public function store(StoreOrganizationRequest $request): JsonResponse
     {
-        $organization = $this->organizationService->create($request->validated());
+
+        $organization = $this->organizationService->create(
+            array_merge($request->validated(), ['user_id' => $request->user()->id])
+        );
 
         return $this->createdResponse(
             new OrganizationResource($organization)
+        );
+    }
+
+    public function bulkStore(BulkStoreOrganizationRequest $request): JsonResponse
+    {
+        $userId = $request->user()->id;
+
+        $organizationsData = collect($request->validated()['organizations'])
+            ->map(fn(array $item) => array_merge($item, ['user_id' => $userId]))
+            ->all();
+
+        $organizations = DB::transaction(
+            fn() => $this->organizationService->bulkCreate($organizationsData)
+        );
+
+        return $this->createdResponse(
+            OrganizationResource::collection($organizations),
+            'Organizations created successfully'
         );
     }
 
@@ -69,5 +92,18 @@ class OrganizationController extends BaseApiController
         $this->organizationService->delete($id);
 
         return $this->noContentResponse();
+    }
+
+    public function toggleStatus(int $id): JsonResponse
+    {
+        $organization = $this->organizationService->toggleStatus($id);
+
+        if (!$organization) {
+            return $this->notFoundResponse();
+        }
+
+        $message = $organization->status === 'active' ? 'Organization activated successfully' : 'Organization deactivated successfully';
+
+        return $this->successResponse(new OrganizationResource($organization), $message);
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('display_name');
             $table->string('legal_name')->nullable();
             $table->string('tax_number', 50)->nullable();
-            $table->string('default_currency', 3)->default('SAR');
+            $table->foreignId('currency_id')->nullable()->constrained('currencies')->nullOnDelete();
             $table->text('notes')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
@@ -52,7 +52,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('party_id')->constrained()->cascadeOnDelete();
             $table->string('label', 50)->nullable();
-            $table->string('country', 100)->default('Saudi Arabia');
+            $table->string('country', 100)->nullable();
             $table->string('city', 100)->nullable();
             $table->text('line_1')->nullable();
             $table->text('line_2')->nullable();

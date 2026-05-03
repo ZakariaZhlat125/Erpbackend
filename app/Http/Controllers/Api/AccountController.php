@@ -70,4 +70,24 @@ class AccountController extends BaseApiController
 
         return $this->noContentResponse();
     }
+
+    public function statement(int $id): JsonResponse
+    {
+        $account = $this->accountService->findById($id);
+
+        if (!$account) {
+            return $this->notFoundResponse();
+        }
+
+        // TODO: Get date range from request
+        // TODO: Implement GetAccountLedgerQuery
+        // $ledger = app(GetAccountLedgerQuery::class)->execute($account, $dateFrom, $dateTo);
+
+        return $this->successResponse([
+            'account' => new AccountResource($account),
+            'transactions' => [],
+            'opening_balance' => 0,
+            'closing_balance' => 0,
+        ]);
+    }
 }

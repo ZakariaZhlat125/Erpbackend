@@ -67,4 +67,42 @@ abstract class BaseRepository implements RepositoryInterface
     {
         return $this->model->where('id', $id)->exists();
     }
+
+    public function findByIds(array $ids, array $columns = ['*'], array $relations = []): Collection
+    {
+        return $this->model->select($columns)->with($relations)->whereIn('id', $ids)->get();
+    }
+
+    public function updateMany(array $ids, array $data): int
+    {
+        return $this->model->whereIn('id', $ids)->update($data);
+    }
+
+    public function search(array $criteria, int $perPage = 15): LengthAwarePaginator
+    {
+        $query = $this->model->newQuery();
+
+        foreach ($criteria as $field => $value) {
+            if ($value === null || $value === '') {
+                continue;
+            }
+
+            if (is_array($value)) {
+                $query->whereIn($field, $value);
+            } elseif (str_contains($field, '_from')) {
+                $actualField = str_replace('_from', '', $field);
+                $query->where($actualField, '>=', $value);
+            } elseif (str_contains($field, '_to')) {
+                $actualField = str_replace('_to', '', $field);
+                $query->where($actualField, '<=', $value);
+            } elseif (str_contains($field, '_like')) {
+                $actualField = str_replace('_like', '', $field);
+                $query->where($actualField, 'like', "%{$value}%");
+            } else {
+                $query->where($field, $value);
+            }
+        }
+
+        return $query->paginate($perPage);
+    }
 }

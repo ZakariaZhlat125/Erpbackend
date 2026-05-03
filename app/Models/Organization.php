@@ -6,16 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Organization extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'name',
         'legal_name',
         'tax_number',
-        'base_currency',
+        'base_currency_id',
         'timezone',
         'locale',
         'status',
@@ -38,6 +40,11 @@ class Organization extends Model
         return $this->hasMany(Branch::class);
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
@@ -46,6 +53,11 @@ class Organization extends Model
     public function parties(): HasMany
     {
         return $this->hasMany(Party::class);
+    }
+
+    public function baseCurrency()
+    {
+        return $this->belongsTo(Currency::class, 'base_currency_id');
     }
 
     public function invoices(): HasMany

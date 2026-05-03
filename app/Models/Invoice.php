@@ -22,7 +22,7 @@ class Invoice extends Model
         'status',
         'issue_date',
         'due_date',
-        'currency_code',
+        'currency_id',
         'subtotal',
         'discount_total',
         'tax_total',
@@ -103,6 +103,11 @@ class Invoice extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
     }
 
     public function scopeDraft($query)

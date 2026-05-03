@@ -70,4 +70,105 @@ class ProductController extends BaseApiController
 
         return $this->noContentResponse();
     }
+
+    public function import(): JsonResponse
+    {
+        // TODO: Validate Excel file upload
+        // TODO: Implement ImportProductsAction
+        // $file = request()->file('file');
+        // $result = app(ImportProductsAction::class)->execute($file);
+
+        return $this->successResponse(
+            ['message' => 'Import functionality not implemented yet'],
+            'Products import queued'
+        );
+    }
+
+    public function lowStock(): JsonResponse
+    {
+        $threshold = request()->integer('threshold', 10);
+        $products = $this->productService->getLowStock($threshold);
+
+        return $this->successResponse($products, 'Low stock products retrieved');
+    }
+
+    public function statistics(): JsonResponse
+    {
+        $stats = $this->productService->getStatistics();
+
+        return $this->successResponse($stats, 'Product statistics retrieved');
+    }
+
+    public function search(): JsonResponse
+    {
+        $criteria = request()->only([
+            'sku_like',
+            'name_like',
+            'description_like',
+            'type',
+            'category_id',
+            'is_active',
+            'track_inventory',
+            'cost_price_from',
+            'cost_price_to',
+            'selling_price_from',
+            'selling_price_to',
+        ]);
+
+        $perPage = request()->integer('per_page', 15);
+        $results = $this->productService->search($criteria, $perPage);
+
+        return $this->paginatedResponse($results);
+    }
+
+    public function bulkUpdatePrices(): JsonResponse
+    {
+        $validated = request()->validate([
+            'product_ids' => 'required|array|min:1',
+            'product_ids.*' => 'required|integer|exists:products,id',
+            'cost_price' => 'sometimes|numeric|min:0',
+            'selling_price' => 'sometimes|numeric|min:0',
+            'cost_price_percentage' => 'sometimes|numeric',
+            'selling_price_percentage' => 'sometimes|numeric',
+        ]);
+
+        $productIds = $validated['product_ids'];
+        unset($validated['product_ids']);
+
+        $count = $this->productService->bulkUpdatePrices($productIds, $validated);
+
+        return $this->successResponse(
+            ['updated_count' => $count],
+            "Successfully updated prices for {$count} products"
+        );
+    }
+
+    public function bulkActivate(): JsonResponse
+    {
+        $validated = request()->validate([
+            'product_ids' => 'required|array|min:1',
+            'product_ids.*' => 'required|integer|exists:products,id',
+            'is_active' => 'required|boolean',
+        ]);
+
+        $count = $this->productService->updateMany(
+            $validated['product_ids'],
+            ['is_active' => $validated['is_active']]
+        );
+
+        $status = $validated['is_active'] ? 'activated' : 'deactivated';
+        return $this->successResponse(
+            ['updated_count' => $count],
+            "Successfully {$status} {$count} products"
+        );
+    }
+
+    public function export(): mixed
+    {
+        // TODO: Implement Excel export using Maatwebsite\Excel
+        // $products = $this->productService->getAll();
+        // return Excel::download(new ProductsExport($products), 'products.xlsx');
+
+        return $this->errorResponse('Export functionality not implemented yet', 501);
+    }
 }

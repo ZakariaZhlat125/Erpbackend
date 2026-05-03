@@ -9,10 +9,7 @@ use Illuminate\Filesystem\Filesystem;
 class MakeServiceCommand extends Command
 {
     protected $signature = 'make:service {name : The name of the microservice (e.g. Product)}
-                            {--m|migration : Create a migration file}
-                            {--a|all : Generate all files (migration, seeder, factory)}
-                            {--f|factory : Create a factory file}
-                            {--s|seeder : Create a seeder file}';
+                            {--m|migration : Create a migration file}';
 
     protected $description = 'Create a new microservice with Repository pattern (Model, Controller, Repository, Service, Requests, Resource, Routes)';
 
@@ -63,13 +60,6 @@ class MakeServiceCommand extends Command
             $this->createMigration($snakePlural);
         }
 
-        if ($this->option('factory') || $this->option('all')) {
-            $this->createFactory($name);
-        }
-
-        if ($this->option('seeder') || $this->option('all')) {
-            $this->createSeeder($name);
-        }
 
         $this->newLine();
         $this->info("Microservice [{$name}] created successfully!");
@@ -194,18 +184,5 @@ class MakeServiceCommand extends Command
         ]);
     }
 
-    protected function createFactory(string $name): void
-    {
-        $this->call('make:factory', [
-            'name' => "{$name}Factory",
-            '--model' => $name,
-        ]);
-    }
 
-    protected function createSeeder(string $name): void
-    {
-        $this->call('make:seeder', [
-            'name' => "{$name}Seeder",
-        ]);
-    }
 }

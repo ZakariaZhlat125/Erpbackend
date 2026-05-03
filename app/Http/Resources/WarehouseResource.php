@@ -11,8 +11,25 @@ class WarehouseResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'organization_id' => $this->organization_id,
+            'branch_id' => $this->branch_id,
+            'name' => $this->name,
+            'code' => $this->code,
+            'address' => $this->address,
+            'manager_user_id' => $this->manager_user_id,
+            'is_active' => $this->is_active,
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
+            
+            // Relationships (when loaded)
+            'branch' => new BranchResource($this->whenLoaded('branch')),
+            'manager' => $this->when($this->relationLoaded('manager'), function () {
+                return [
+                    'id' => $this->manager->id,
+                    'name' => $this->manager->name,
+                    'email' => $this->manager->email,
+                ];
+            }),
         ];
     }
 }

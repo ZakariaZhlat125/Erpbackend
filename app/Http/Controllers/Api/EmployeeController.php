@@ -70,4 +70,82 @@ class EmployeeController extends BaseApiController
 
         return $this->noContentResponse();
     }
+
+    public function import(): JsonResponse
+    {
+        // TODO: Validate Excel file upload
+        // TODO: Implement ImportEmployeesAction
+        // $file = request()->file('file');
+        // $result = app(ImportEmployeesAction::class)->execute($file);
+
+        return $this->successResponse(
+            ['message' => 'Import functionality not implemented yet'],
+            'Employees import queued'
+        );
+    }
+
+    public function statistics(): JsonResponse
+    {
+        $stats = $this->employeeService->getStatistics();
+
+        return $this->successResponse($stats, 'Employee statistics retrieved');
+    }
+
+    public function search(): JsonResponse
+    {
+        $criteria = request()->only([
+            'employee_number_like',
+            'full_name_like',
+            'first_name_like',
+            'last_name_like',
+            'email',
+            'department_name',
+            'job_title_like',
+            'status',
+            'hire_date_from',
+            'hire_date_to',
+            'base_salary_from',
+            'base_salary_to',
+        ]);
+
+        $perPage = request()->integer('per_page', 15);
+        $results = $this->employeeService->search($criteria, $perPage);
+
+        return $this->paginatedResponse($results);
+    }
+
+    public function bulkUpdateStatus(): JsonResponse
+    {
+        $validated = request()->validate([
+            'employee_ids' => 'required|array|min:1',
+            'employee_ids.*' => 'required|integer|exists:employees,id',
+            'status' => 'required|in:active,inactive,terminated',
+        ]);
+
+        $count = $this->employeeService->updateMany(
+            $validated['employee_ids'],
+            ['status' => $validated['status']]
+        );
+
+        return $this->successResponse(
+            ['updated_count' => $count],
+            "Successfully updated status for {$count} employees"
+        );
+    }
+
+    public function orgChart(): JsonResponse
+    {
+        $orgChart = $this->employeeService->getOrgChart();
+
+        return $this->successResponse($orgChart, 'Organization chart retrieved');
+    }
+
+    public function export(): mixed
+    {
+        // TODO: Implement Excel export using Maatwebsite\Excel
+        // $employees = $this->employeeService->getAll();
+        // return Excel::download(new EmployeesExport($employees), 'employees.xlsx');
+
+        return $this->errorResponse('Export functionality not implemented yet', 501);
+    }
 }

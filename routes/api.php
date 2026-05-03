@@ -7,24 +7,22 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-require __DIR__.'/api/organizations.php';
+// Core Module: Auth, Users, Roles, Permissions, Settings
+require __DIR__.'/api/core.php';
 
-require __DIR__.'/api/branches.php';
+// Organization Module: Organizations, Branches, Parties
+require __DIR__.'/api/organization.php';
 
-require __DIR__.'/api/parties.php';
+// Accounting Module: Accounts, Invoices, Payments, Journal, Reports
+require __DIR__.'/api/accounting.php';
 
-require __DIR__.'/api/invoices.php';
+// Inventory Module: Products, Warehouses, Stock, Movements
+require __DIR__.'/api/inventory.php';
 
-require __DIR__.'/api/accounts.php';
+// HR Module: Employees, Attendance, Leaves, Payroll
+require __DIR__.'/api/hr.php';
 
-require __DIR__.'/api/payments.php';
-
-require __DIR__.'/api/products.php';
-
-require __DIR__.'/api/warehouses.php';
-
-require __DIR__.'/api/employees.php';
-
+// Projects Module: Projects, Tasks, Time Entries
 require __DIR__.'/api/projects.php';
 
-require __DIR__.'/api/tasks.php';
+require __DIR__.'/api/account_services.php';

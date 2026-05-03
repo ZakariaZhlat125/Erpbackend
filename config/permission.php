@@ -101,6 +101,11 @@ return [
     ],
 
     /*
+     * The default guard to use for permissions and roles.
+     */
+    'guard_name' => env('AUTH_GUARD', 'sanctum'),
+
+    /*
      * When set to true, the method for checking permissions will be registered on the gate.
      * Set this to false if you want to implement custom logic for checking permissions.
      */

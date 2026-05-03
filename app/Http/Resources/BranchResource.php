@@ -11,8 +11,17 @@ class BranchResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'organization_id' => $this->organization_id,
+            'name' => $this->name,
+            'code' => $this->code,
+            'address' => $this->address,
+            'phone' => $this->phone,
+            'is_active' => $this->is_active,
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
+            
+            // Relationships (when loaded)
+            'organization' => new OrganizationResource($this->whenLoaded('organization')),
         ];
     }
 }

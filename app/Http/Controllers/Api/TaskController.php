@@ -70,4 +70,23 @@ class TaskController extends BaseApiController
 
         return $this->noContentResponse();
     }
+
+    public function updateStatus(int $id): JsonResponse
+    {
+        $task = $this->taskService->findById($id);
+
+        if (!$task) {
+            return $this->notFoundResponse();
+        }
+
+        // TODO: Validate status
+        // $status = request()->validate(['status' => 'required|in:todo,in_progress,blocked,done,cancelled']);
+        // TODO: Implement UpdateTaskStatusAction
+        // $updatedTask = app(UpdateTaskStatusAction::class)->execute($task, $status['status']);
+
+        return $this->successResponse(
+            new TaskResource($task),
+            'Task status updated successfully'
+        );
+    }
 }

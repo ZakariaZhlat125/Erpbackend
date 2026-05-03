@@ -29,7 +29,7 @@ class Employee extends Model
         'manager_employee_id',
         'status',
         'base_salary',
-        'currency_code',
+        'currency_id',
     ];
 
     protected function casts(): array
@@ -102,6 +102,11 @@ class Employee extends Model
     public function payrollLines(): HasMany
     {
         return $this->hasMany(PayrollLine::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
     }
 
     public function scopeActive($query)

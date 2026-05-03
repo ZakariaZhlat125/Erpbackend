@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('status', ['draft', 'approved', 'partially_paid', 'paid', 'cancelled'])->default('draft');
             $table->date('issue_date');
             $table->date('due_date');
-            $table->string('currency_code', 3)->default('SAR');
+            $table->foreignId('currency_id')->nullable()->constrained('currencies')->nullOnDelete();
             $table->decimal('subtotal', 15, 2)->default(0);
             $table->decimal('discount_total', 15, 2)->default(0);
             $table->decimal('tax_total', 15, 2)->default(0);

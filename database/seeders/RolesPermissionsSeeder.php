@@ -20,7 +20,7 @@ class RolesPermissionsSeeder extends Seeder
             Permission::firstOrCreate([
                 'name' => $permission['name'],
             ], [
-                'guard_name' => 'web',
+                'guard_name' => 'sanctum',
             ]);
         }
 
@@ -32,15 +32,17 @@ class RolesPermissionsSeeder extends Seeder
 
     private function createRolesAndAssignPermissions(): void
     {
-        // Super Admin - has all permissions
-        $superAdmin = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
-        $superAdmin->givePermissionTo(Permission::all());
+        // Super Admin - has all permissions across all organizations
+        $superAdmin = Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'sanctum']);
+        $superAdmin->givePermissionTo(Permission::where('guard_name', 'sanctum')->get());
 
         // Admin - has most permissions except some critical ones
-        $admin = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'web']);
+        $admin = Role::firstOrCreate(['name' => 'Admin', 'guard_name' => 'sanctum']);
         $admin->givePermissionTo([
-            'users:read', 'users:write',
-            'roles:read',
+            'users:read', 'users:write', 'users:delete',
+            'roles:read', 'roles:write', 'roles:manage_permissions',
+            'organizations:read', 'organizations:write', 'organizations:delete',
+            'branches:read', 'branches:write', 'branches:delete',
             'parties:read', 'parties:write', 'parties:delete',
             'invoices:read', 'invoices:write', 'invoices:approve', 'invoices:cancel',
             'payments:read', 'payments:write',
@@ -57,13 +59,41 @@ class RolesPermissionsSeeder extends Seeder
             'projects:read', 'projects:write',
             'tasks:read', 'tasks:write',
             'time_entries:read', 'time_entries:write',
-            'settings:read',
+            'settings:read', 'settings:write',
+            'audit:read',
+        ]);
+
+        // OWNER_ORGANIZATION - has full permissions within their organization
+        $ownerOrganization = Role::firstOrCreate(['name' => 'OWNER_ORGANIZATION', 'guard_name' => 'sanctum']);
+        $ownerOrganization->givePermissionTo([
+            'users:read', 'users:write',
+            'roles:read',
+            'organizations:read', 'organizations:write',
+            'branches:read', 'branches:write', 'branches:delete',
+            'parties:read', 'parties:write', 'parties:delete',
+            'invoices:read', 'invoices:write', 'invoices:approve', 'invoices:cancel',
+            'payments:read', 'payments:write',
+            'accounts:read', 'accounts:write',
+            'journals:read', 'journals:write', 'journals:post',
+            'reports:financial', 'reports:inventory', 'reports:hr',
+            'products:read', 'products:write', 'products:delete',
+            'warehouses:read', 'warehouses:write',
+            'stock:read', 'stock:adjust', 'stock:count',
+            'employees:read', 'employees:write', 'employees:delete',
+            'attendance:read', 'attendance:write',
+            'leaves:read', 'leaves:write', 'leaves:approve',
+            'payroll:read', 'payroll:write', 'payroll:approve',
+            'projects:read', 'projects:write',
+            'tasks:read', 'tasks:write',
+            'time_entries:read', 'time_entries:write',
+            'settings:read', 'settings:write',
             'audit:read',
         ]);
 
         // Manager - limited permissions
-        $manager = Role::firstOrCreate(['name' => 'Manager', 'guard_name' => 'web']);
+        $manager = Role::firstOrCreate(['name' => 'Manager', 'guard_name' => 'sanctum']);
         $manager->givePermissionTo([
+            'branches:read', 'branches:write',
             'parties:read', 'parties:write',
             'invoices:read', 'invoices:write',
             'payments:read', 'payments:write',
@@ -80,7 +110,7 @@ class RolesPermissionsSeeder extends Seeder
         ]);
 
         // User - basic read permissions
-        $user = Role::firstOrCreate(['name' => 'User', 'guard_name' => 'web']);
+        $user = Role::firstOrCreate(['name' => 'User', 'guard_name' => 'sanctum']);
         $user->givePermissionTo([
             'parties:read',
             'invoices:read',
@@ -110,6 +140,14 @@ class RolesPermissionsSeeder extends Seeder
             ['module' => 'roles', 'action' => 'read', 'name' => 'roles:read', 'label' => 'View Roles'],
             ['module' => 'roles', 'action' => 'write', 'name' => 'roles:write', 'label' => 'Create/Edit Roles'],
             ['module' => 'roles', 'action' => 'manage_permissions', 'name' => 'roles:manage_permissions', 'label' => 'Manage Role Permissions'],
+            
+            ['module' => 'organizations', 'action' => 'read', 'name' => 'organizations:read', 'label' => 'View Organizations'],
+            ['module' => 'organizations', 'action' => 'write', 'name' => 'organizations:write', 'label' => 'Create/Edit Organizations'],
+            ['module' => 'organizations', 'action' => 'delete', 'name' => 'organizations:delete', 'label' => 'Delete Organizations'],
+
+            ['module' => 'branches', 'action' => 'read', 'name' => 'branches:read', 'label' => 'View Branches'],
+            ['module' => 'branches', 'action' => 'write', 'name' => 'branches:write', 'label' => 'Create/Edit Branches'],
+            ['module' => 'branches', 'action' => 'delete', 'name' => 'branches:delete', 'label' => 'Delete Branches'],
             
             ['module' => 'parties', 'action' => 'read', 'name' => 'parties:read', 'label' => 'View Parties'],
             ['module' => 'parties', 'action' => 'write', 'name' => 'parties:write', 'label' => 'Create/Edit Parties'],

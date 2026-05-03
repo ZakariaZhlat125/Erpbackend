@@ -33,7 +33,7 @@ return new class extends Migration
             $table->foreignId('account_id')->constrained()->cascadeOnDelete();
             $table->decimal('debit', 15, 2)->default(0);
             $table->decimal('credit', 15, 2)->default(0);
-            $table->string('currency_code', 3)->default('SAR');
+            $table->foreignId('currency_id')->nullable()->constrained('currencies')->nullOnDelete();
             $table->decimal('exchange_rate', 10, 6)->default(1.000000);
             $table->text('description')->nullable();
             $table->foreignId('party_id')->nullable()->constrained()->nullOnDelete();

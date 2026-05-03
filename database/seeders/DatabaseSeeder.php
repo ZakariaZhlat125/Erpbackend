@@ -10,8 +10,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolesPermissionsSeeder::class,
-            DemoOrganizationSeeder::class,
-            ChartOfAccountsSeeder::class,
+            CurrencySeeder::class,
+            UsersSeeder::class,
         ]);
 
         $this->command->info('Database seeded successfully!');

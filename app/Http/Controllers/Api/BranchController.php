@@ -14,60 +14,67 @@ class BranchController extends BaseApiController
         protected BranchService $branchService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(int $organization): JsonResponse
     {
-        $data = $this->branchService->getPaginated(
+        $data = $this->branchService->allByOrganization(
+            organizationId: $organization,
             perPage: request()->integer('per_page', 15)
         );
 
         return $this->paginatedResponse($data);
     }
 
-    public function store(StoreBranchRequest $request): JsonResponse
+    public function store(StoreBranchRequest $request, int $organization): JsonResponse
     {
-        $branch = $this->branchService->create($request->validated());
+        $branch = $this->branchService->createForOrganization($organization, $request->validated());
 
-        return $this->createdResponse(
-            new BranchResource($branch)
-        );
+        return $this->createdResponse(new BranchResource($branch));
     }
 
-    public function show(int $id): JsonResponse
+    public function show(int $organization, int $branch): JsonResponse
     {
-        $branch = $this->branchService->findById($id);
+        $model = $this->branchService->findByIdAndOrganization($branch, $organization);
 
-        if (!$branch) {
+        if (! $model) {
             return $this->notFoundResponse();
         }
 
-        return $this->successResponse(
-            new BranchResource($branch)
-        );
+        return $this->successResponse(new BranchResource($model));
     }
 
-    public function update(UpdateBranchRequest $request, int $id): JsonResponse
+    public function update(UpdateBranchRequest $request, int $organization, int $branch): JsonResponse
     {
-        if (!$this->branchService->exists($id)) {
+        $model = $this->branchService->updateForOrganization($branch, $organization, $request->validated());
+
+        if (! $model) {
             return $this->notFoundResponse();
         }
 
-        $this->branchService->update($id, $request->validated());
-        $branch = $this->branchService->findById($id);
-
-        return $this->successResponse(
-            new BranchResource($branch),
-            'Resource updated successfully'
-        );
+        return $this->successResponse(new BranchResource($model), 'Branch updated successfully');
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(int $organization, int $branch): JsonResponse
     {
-        if (!$this->branchService->exists($id)) {
+        $deleted = $this->branchService->deleteForOrganization($branch, $organization);
+
+        if (! $deleted) {
             return $this->notFoundResponse();
         }
-
-        $this->branchService->delete($id);
 
         return $this->noContentResponse();
+    }
+
+    public function toggleStatus(int $organization, int $branch): JsonResponse
+    {
+        $model = $this->branchService->findByIdAndOrganization($branch, $organization);
+        if (! $model) {
+            return $this->notFoundResponse();
+        }
+
+        $model = $this->branchService->toggleStatus($model->id);
+
+        $message = $model->is_active ? 'Branch activated successfully' : 'Branch deactivated successfully';
+
+        return $this->successResponse(new BranchResource($model), $message);
     }
 }
