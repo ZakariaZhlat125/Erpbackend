@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Party\AddPartyContactRequest;
+use App\Http\Requests\Party\AddPartyRoleRequest;
+use App\Http\Requests\Party\BulkActivatePartyRequest;
 use App\Http\Requests\Party\StorePartyRequest;
 use App\Http\Requests\Party\UpdatePartyRequest;
 use App\Http\Resources\PartyResource;
@@ -14,29 +17,32 @@ class PartyController extends BaseApiController
         protected PartyService $partyService
     ) {}
 
-    public function index(): JsonResponse
+    public function index(int $organization): JsonResponse
     {
         $data = $this->partyService->getPaginated(
-            perPage: request()->integer('per_page', 15)
+            perPage: request()->integer('per_page', 15),
+            filters: ['organization_id' => $organization]
         );
 
         return $this->paginatedResponse($data);
     }
 
-    public function store(StorePartyRequest $request): JsonResponse
+    public function store(StorePartyRequest $request, int $organization): JsonResponse
     {
-        $party = $this->partyService->create($request->validated());
+        $party = $this->partyService->create(
+            array_merge($request->validated(), ['organization_id' => $organization])
+        );
 
         return $this->createdResponse(
             new PartyResource($party)
         );
     }
 
-    public function show(int $id): JsonResponse
+    public function show(int $organization, int $party): JsonResponse
     {
-        $party = $this->partyService->findById($id);
+        $party = $this->partyService->findById($party);
 
-        if (! $party) {
+        if (! $party || $party->organization_id !== $organization) {
             return $this->notFoundResponse();
         }
 
@@ -45,14 +51,16 @@ class PartyController extends BaseApiController
         );
     }
 
-    public function update(UpdatePartyRequest $request, int $id): JsonResponse
+    public function update(UpdatePartyRequest $request, int $organization, int $party): JsonResponse
     {
-        if (! $this->partyService->exists($id)) {
+        $existingParty = $this->partyService->findById($party);
+
+        if (! $existingParty || $existingParty->organization_id !== $organization) {
             return $this->notFoundResponse();
         }
 
-        $this->partyService->update($id, $request->validated());
-        $party = $this->partyService->findById($id);
+        $this->partyService->update($party, $request->validated());
+        $party = $this->partyService->findById($party);
 
         return $this->successResponse(
             new PartyResource($party),
@@ -60,56 +68,50 @@ class PartyController extends BaseApiController
         );
     }
 
-    public function destroy(int $id): JsonResponse
+    public function destroy(int $organization, int $party): JsonResponse
     {
-        if (! $this->partyService->exists($id)) {
+        $existingParty = $this->partyService->findById($party);
+
+        if (! $existingParty || $existingParty->organization_id !== $organization) {
             return $this->notFoundResponse();
         }
 
-        $this->partyService->delete($id);
+        $this->partyService->delete($party);
 
         return $this->noContentResponse();
     }
 
-    public function addContact(int $id): JsonResponse
+    public function addContact(AddPartyContactRequest $request, int $organization, int $party): JsonResponse
     {
-        if (! $this->partyService->exists($id)) {
+        $existingParty = $this->partyService->findById($party);
+
+        if (! $existingParty || $existingParty->organization_id !== $organization) {
             return $this->notFoundResponse();
         }
 
-        $contactData = request()->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'email', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'position' => ['nullable', 'string', 'max:255'],
-            'is_primary' => ['nullable', 'boolean'],
-        ]);
-
-        $contact = $this->partyService->addContact($id, $contactData);
+        $contact = $this->partyService->addContact($party, $request->validated());
 
         return $this->createdResponse($contact, 'Contact added successfully');
     }
 
-    public function addRole(int $id): JsonResponse
+    public function addRole(AddPartyRoleRequest $request, int $organization, int $party): JsonResponse
     {
-        if (! $this->partyService->exists($id)) {
+        $existingParty = $this->partyService->findById($party);
+
+        if (! $existingParty || $existingParty->organization_id !== $organization) {
             return $this->notFoundResponse();
         }
 
-        $validated = request()->validate([
-            'role' => ['required', 'string', 'in:customer,supplier,agent,contractor'],
-        ]);
-
-        $this->partyService->addRole($id, $validated['role']);
+        $this->partyService->addRole($party, $request->validated()['role']);
 
         return $this->createdResponse(null, 'Role added successfully');
     }
 
-    public function statement(int $id): JsonResponse
+    public function statement(int $organization, int $party): JsonResponse
     {
-        $party = $this->partyService->findById($id);
+        $party = $this->partyService->findById($party);
 
-        if (! $party) {
+        if (! $party || $party->organization_id !== $organization) {
             return $this->notFoundResponse();
         }
 
@@ -125,14 +127,14 @@ class PartyController extends BaseApiController
         ]);
     }
 
-    public function statistics(): JsonResponse
+    public function statistics(int $organization): JsonResponse
     {
-        $stats = $this->partyService->getStatistics();
+        $stats = $this->partyService->getStatistics($organization);
 
         return $this->successResponse($stats, 'Party statistics retrieved');
     }
 
-    public function search(): JsonResponse
+    public function search(int $organization): JsonResponse
     {
         $criteria = request()->only([
             'code_like',
@@ -144,19 +146,24 @@ class PartyController extends BaseApiController
             'default_currency',
         ]);
 
+        $criteria['organization_id'] = $organization;
         $perPage = request()->integer('per_page', 15);
         $results = $this->partyService->search($criteria, $perPage);
 
         return $this->paginatedResponse($results);
     }
 
-    public function bulkActivate(): JsonResponse
+    public function bulkActivate(BulkActivatePartyRequest $request, int $organization): JsonResponse
     {
-        $validated = request()->validate([
-            'party_ids' => 'required|array|min:1',
-            'party_ids.*' => 'required|integer|exists:parties,id',
-            'is_active' => 'required|boolean',
-        ]);
+        $validated = $request->validated();
+
+        // Verify all parties belong to the organization
+        $parties = $this->partyService->findByIds($validated['party_ids']);
+        $invalidParties = $parties->where('organization_id', '!=', $organization);
+
+        if ($invalidParties->isNotEmpty()) {
+            return $this->errorResponse('Some parties do not belong to this organization', 403);
+        }
 
         $count = $this->partyService->updateMany(
             $validated['party_ids'],
@@ -171,18 +178,24 @@ class PartyController extends BaseApiController
         );
     }
 
-    public function export(): mixed
+    public function export(int $organization): mixed
     {
         // TODO: Implement Excel export using Maatwebsite\Excel
-        // $parties = $this->partyService->getAll();
+        // $parties = $this->partyService->findByOrganization($organization);
         // return Excel::download(new PartiesExport($parties), 'parties.xlsx');
 
         return $this->errorResponse('Export functionality not implemented yet', 501);
     }
 
-    public function toggleStatus(int $id): JsonResponse
+    public function toggleStatus(int $organization, int $party): JsonResponse
     {
-        $party = $this->partyService->toggleStatus($id);
+        $existingParty = $this->partyService->findById($party);
+
+        if (! $existingParty || $existingParty->organization_id !== $organization) {
+            return $this->notFoundResponse();
+        }
+
+        $party = $this->partyService->toggleStatus($party);
 
         if (! $party) {
             return $this->notFoundResponse();

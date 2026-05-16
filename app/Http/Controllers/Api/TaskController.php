@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Task\StoreTaskRequest;
+use App\Http\Requests\Task\UpdateStatusTaskRequest;
 use App\Http\Requests\Task\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
@@ -71,7 +72,7 @@ class TaskController extends BaseApiController
         return $this->noContentResponse();
     }
 
-    public function updateStatus(int $id): JsonResponse
+    public function updateStatus(UpdateStatusTaskRequest $request, int $id): JsonResponse
     {
         $task = $this->taskService->findById($id);
 
@@ -79,10 +80,8 @@ class TaskController extends BaseApiController
             return $this->notFoundResponse();
         }
 
-        // TODO: Validate status
-        // $status = request()->validate(['status' => 'required|in:todo,in_progress,blocked,done,cancelled']);
         // TODO: Implement UpdateTaskStatusAction
-        // $updatedTask = app(UpdateTaskStatusAction::class)->execute($task, $status['status']);
+        // $updatedTask = app(UpdateTaskStatusAction::class)->execute($task, $request->validated()['status']);
 
         return $this->successResponse(
             new TaskResource($task),

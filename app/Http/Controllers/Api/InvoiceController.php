@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Invoice\BulkApproveInvoiceRequest;
+use App\Http\Requests\Invoice\BulkDeleteInvoiceRequest;
 use App\Http\Requests\Invoice\StoreInvoiceRequest;
 use App\Http\Requests\Invoice\UpdateInvoiceRequest;
 use App\Http\Resources\InvoiceResource;
@@ -134,25 +136,16 @@ class InvoiceController extends BaseApiController
         return $this->errorResponse('PDF generation not implemented yet', 501);
     }
 
-    public function bulkApprove(): JsonResponse
+    public function bulkApprove(BulkApproveInvoiceRequest $request): JsonResponse
     {
-        $validated = request()->validate([
-            'invoice_ids' => 'required|array|min:1',
-            'invoice_ids.*' => 'required|integer|exists:invoices,id',
-        ]);
-
-        $result = $this->invoiceService->bulkApprove($validated['invoice_ids']);
+        $result = $this->invoiceService->bulkApprove($request->validated()['invoice_ids']);
 
         return $this->successResponse($result, 'Bulk approval completed');
     }
 
-    public function bulkDelete(): JsonResponse
+    public function bulkDelete(BulkDeleteInvoiceRequest $request): JsonResponse
     {
-        $validated = request()->validate([
-            'invoice_ids' => 'required|array|min:1',
-            'invoice_ids.*' => 'required|integer|exists:invoices,id',
-        ]);
-
+        $validated = $request->validated();
         $invoices = $this->invoiceService->findByIds($validated['invoice_ids']);
         $deleted = [];
         $failed = [];

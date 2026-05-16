@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Product\BulkActivateProductRequest;
+use App\Http\Requests\Product\BulkUpdatePricesProductRequest;
 use App\Http\Requests\Product\StoreProductRequest;
 use App\Http\Requests\Product\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
@@ -121,17 +123,9 @@ class ProductController extends BaseApiController
         return $this->paginatedResponse($results);
     }
 
-    public function bulkUpdatePrices(): JsonResponse
+    public function bulkUpdatePrices(BulkUpdatePricesProductRequest $request): JsonResponse
     {
-        $validated = request()->validate([
-            'product_ids' => 'required|array|min:1',
-            'product_ids.*' => 'required|integer|exists:products,id',
-            'cost_price' => 'sometimes|numeric|min:0',
-            'selling_price' => 'sometimes|numeric|min:0',
-            'cost_price_percentage' => 'sometimes|numeric',
-            'selling_price_percentage' => 'sometimes|numeric',
-        ]);
-
+        $validated = $request->validated();
         $productIds = $validated['product_ids'];
         unset($validated['product_ids']);
 
@@ -143,13 +137,9 @@ class ProductController extends BaseApiController
         );
     }
 
-    public function bulkActivate(): JsonResponse
+    public function bulkActivate(BulkActivateProductRequest $request): JsonResponse
     {
-        $validated = request()->validate([
-            'product_ids' => 'required|array|min:1',
-            'product_ids.*' => 'required|integer|exists:products,id',
-            'is_active' => 'required|boolean',
-        ]);
+        $validated = $request->validated();
 
         $count = $this->productService->updateMany(
             $validated['product_ids'],

@@ -15,6 +15,11 @@ class PartyService extends BaseService
         parent::__construct($partyRepository);
     }
 
+    public function getPaginated(int $perPage = 15, array $columns = ['*'], array $relations = [], array $filters = []): LengthAwarePaginator
+    {
+        return $this->partyRepository->paginate($perPage, $columns, $relations, $filters);
+    }
+
     public function findByOrganization(int $organizationId, int $perPage = 15): LengthAwarePaginator
     {
         return $this->partyRepository->findByOrganization($organizationId, $perPage);
@@ -45,9 +50,13 @@ class PartyService extends BaseService
         return $this->partyRepository->toggleStatus($id);
     }
 
-    public function getStatistics(): array
+    public function getStatistics(?int $organizationId = null): array
     {
         $query = Party::query();
+
+        if ($organizationId) {
+            $query->where('organization_id', $organizationId);
+        }
 
         return [
             'total_count'     => (clone $query)->count(),

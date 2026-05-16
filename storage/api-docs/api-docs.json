@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://my-default-host.com/api/v1",
+            "url": "http://localhost:8000/api/v1",
             "description": "Local Development Server"
         },
         {
@@ -369,24 +369,10 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     },
                     "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ForbiddenResponse"
-                                }
-                            }
-                        }
+                        "description": "Forbidden"
                     }
                 },
                 "security": [
@@ -434,24 +420,10 @@
                         }
                     },
                     "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
+                        "description": "Validation error"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -500,24 +472,10 @@
                         }
                     },
                     "404": {
-                        "description": "Branch not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Branch not found"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -574,34 +532,13 @@
                         }
                     },
                     "404": {
-                        "description": "Branch not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Branch not found"
                     },
                     "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
+                        "description": "Validation error"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -641,24 +578,10 @@
                         "description": "Branch deleted successfully"
                     },
                     "404": {
-                        "description": "Branch not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Branch not found"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -708,34 +631,10 @@
                         }
                     },
                     "404": {
-                        "description": "Branch not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Branch not found"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ForbiddenResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -777,24 +676,10 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     },
                     "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ForbiddenResponse"
-                                }
-                            }
-                        }
+                        "description": "Forbidden"
                     }
                 },
                 "security": [
@@ -831,24 +716,10 @@
                         }
                     },
                     "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
+                        "description": "Validation error"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -887,24 +758,10 @@
                         }
                     },
                     "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
+                        "description": "Validation error"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -944,24 +801,10 @@
                         }
                     },
                     "404": {
-                        "description": "Organization not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Organization not found"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1009,34 +852,13 @@
                         }
                     },
                     "404": {
-                        "description": "Organization not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Organization not found"
                     },
                     "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
+                        "description": "Validation error"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1067,24 +889,10 @@
                         "description": "Organization deleted successfully"
                     },
                     "404": {
-                        "description": "Organization not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Organization not found"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1125,34 +933,10 @@
                         }
                     },
                     "404": {
-                        "description": "Organization not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Organization not found"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ForbiddenResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1162,15 +946,24 @@
                 ]
             }
         },
-        "/parties": {
+        "/organizations/{organization}/parties": {
             "get": {
                 "tags": [
                     "Parties"
                 ],
                 "summary": "List parties",
-                "description": "Returns paginated list of parties with optional filters",
-                "operationId": "8bab98607590842332701236e7db80bb",
+                "description": "Returns paginated list of parties for a specific organization",
+                "operationId": "52ea8016f2d8a8bf90c72e685360701e",
                 "parameters": [
+                    {
+                        "name": "organization",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
                     {
                         "name": "per_page",
                         "in": "query",
@@ -1215,24 +1008,10 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     },
                     "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ForbiddenResponse"
-                                }
-                            }
-                        }
+                        "description": "Forbidden"
                     }
                 },
                 "security": [
@@ -1246,7 +1025,18 @@
                     "Parties"
                 ],
                 "summary": "Create a party",
-                "operationId": "929a9ef76ce66a57333d9a82d1984606",
+                "operationId": "a91a01ecf4146a4d576443dbee3c9585",
+                "parameters": [
+                    {
+                        "name": "organization",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1269,24 +1059,10 @@
                         }
                     },
                     "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
+                        "description": "Validation error"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1296,16 +1072,25 @@
                 ]
             }
         },
-        "/parties/{id}": {
+        "/organizations/{organization}/parties/{party}": {
             "get": {
                 "tags": [
                     "Parties"
                 ],
                 "summary": "Get a party",
-                "operationId": "516a6a1816c3618ec09a85e8753e994c",
+                "operationId": "803a919e1bbbfdf6660eae3c8672c223",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "organization",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "party",
                         "in": "path",
                         "description": "Party ID",
                         "required": true,
@@ -1326,24 +1111,10 @@
                         }
                     },
                     "404": {
-                        "description": "Party not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Party not found"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1357,10 +1128,19 @@
                     "Parties"
                 ],
                 "summary": "Update a party",
-                "operationId": "ad4f789b96ec765e5f60c7933ef15738",
+                "operationId": "67c4809cabb07563f7eb8f8d3192d8f0",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "organization",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "party",
                         "in": "path",
                         "description": "Party ID",
                         "required": true,
@@ -1391,34 +1171,13 @@
                         }
                     },
                     "404": {
-                        "description": "Party not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Party not found"
                     },
                     "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
+                        "description": "Validation error"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1432,10 +1191,19 @@
                     "Parties"
                 ],
                 "summary": "Delete a party",
-                "operationId": "1993d1f64528d208ceb2dfd32f60a0f3",
+                "operationId": "fab21fe6a15c3dd88a6198b8136967fe",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "organization",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "party",
                         "in": "path",
                         "description": "Party ID",
                         "required": true,
@@ -1449,24 +1217,10 @@
                         "description": "Party deleted successfully"
                     },
                     "404": {
-                        "description": "Party not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Party not found"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1476,16 +1230,25 @@
                 ]
             }
         },
-        "/parties/{id}/contacts": {
+        "/organizations/{organization}/parties/{party}/contacts": {
             "post": {
                 "tags": [
                     "Parties"
                 ],
                 "summary": "Add a contact to a party",
-                "operationId": "30affe739412185c2b323638a0c2b546",
+                "operationId": "69d9c7c664a10687238fd924341c72be",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "organization",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "party",
                         "in": "path",
                         "description": "Party ID",
                         "required": true,
@@ -1509,34 +1272,13 @@
                         "description": "Contact added successfully"
                     },
                     "404": {
-                        "description": "Party not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Party not found"
                     },
                     "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
+                        "description": "Validation error"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1546,16 +1288,25 @@
                 ]
             }
         },
-        "/parties/{id}/roles": {
+        "/organizations/{organization}/parties/{party}/roles": {
             "post": {
                 "tags": [
                     "Parties"
                 ],
                 "summary": "Add a role to a party",
-                "operationId": "6ac4c7dd2f37569c01255071a668f747",
+                "operationId": "3001db7c07e5d218eb283fef6fd17d9d",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "organization",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "party",
                         "in": "path",
                         "description": "Party ID",
                         "required": true,
@@ -1579,34 +1330,13 @@
                         "description": "Role added successfully"
                     },
                     "404": {
-                        "description": "Party not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Party not found"
                     },
                     "422": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationErrorResponse"
-                                }
-                            }
-                        }
+                        "description": "Validation error"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1616,13 +1346,24 @@
                 ]
             }
         },
-        "/parties/statistics": {
+        "/organizations/{organization}/parties/statistics": {
             "get": {
                 "tags": [
                     "Parties"
                 ],
                 "summary": "Get party statistics",
-                "operationId": "bc1c11fa6c840d86e67dfb8596a049c9",
+                "operationId": "93fb9789e1839d3cbe013892fe1f3282",
+                "parameters": [
+                    {
+                        "name": "organization",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Party statistics"
@@ -1638,14 +1379,23 @@
                 ]
             }
         },
-        "/parties/search": {
+        "/organizations/{organization}/parties/search": {
             "get": {
                 "tags": [
                     "Parties"
                 ],
                 "summary": "Search parties",
-                "operationId": "2d3795d64cc81bdfd0484f17e2cc7104",
+                "operationId": "15a7ebae93daf9ab4dff7a5283fe73a7",
                 "parameters": [
+                    {
+                        "name": "organization",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
                     {
                         "name": "q",
                         "in": "query",
@@ -1678,17 +1428,26 @@
                 ]
             }
         },
-        "/parties/{id}/toggle-status": {
+        "/organizations/{organization}/parties/{party}/toggle-status": {
             "post": {
                 "tags": [
                     "Parties"
                 ],
                 "summary": "Toggle party active status",
                 "description": "Activate or deactivate a party by toggling its is_active flag",
-                "operationId": "bbc08b1c1bfb35d474fc013393d74d00",
+                "operationId": "02c092e9b3e01b51c5ad7371876e60ec",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "organization",
+                        "in": "path",
+                        "description": "Organization ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "party",
                         "in": "path",
                         "description": "Party ID",
                         "required": true,
@@ -1709,34 +1468,10 @@
                         }
                     },
                     "404": {
-                        "description": "Party not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/NotFoundResponse"
-                                }
-                            }
-                        }
+                        "description": "Party not found"
                     },
                     "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UnauthenticatedResponse"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ForbiddenResponse"
-                                }
-                            }
-                        }
+                        "description": "Unauthenticated"
                     }
                 },
                 "security": [
@@ -1890,92 +1625,6 @@
                     "data": {
                         "type": "object",
                         "nullable": true
-                    }
-                },
-                "type": "object"
-            },
-            "ErrorResponse": {
-                "properties": {
-                    "success": {
-                        "type": "boolean",
-                        "example": false
-                    },
-                    "message": {
-                        "type": "string",
-                        "example": "An error occurred"
-                    }
-                },
-                "type": "object"
-            },
-            "UnauthenticatedResponse": {
-                "properties": {
-                    "success": {
-                        "type": "boolean",
-                        "example": false
-                    },
-                    "message": {
-                        "type": "string",
-                        "example": "Unauthenticated."
-                    }
-                },
-                "type": "object"
-            },
-            "ForbiddenResponse": {
-                "properties": {
-                    "success": {
-                        "type": "boolean",
-                        "example": false
-                    },
-                    "message": {
-                        "type": "string",
-                        "example": "User does not have the right permissions."
-                    }
-                },
-                "type": "object"
-            },
-            "NotFoundResponse": {
-                "properties": {
-                    "success": {
-                        "type": "boolean",
-                        "example": false
-                    },
-                    "message": {
-                        "type": "string",
-                        "example": "Resource not found."
-                    }
-                },
-                "type": "object"
-            },
-            "ValidationErrorResponse": {
-                "properties": {
-                    "success": {
-                        "type": "boolean",
-                        "example": false
-                    },
-                    "message": {
-                        "type": "string",
-                        "example": "The given data was invalid."
-                    },
-                    "errors": {
-                        "type": "object",
-                        "example": {
-                            "field": [
-                                "The field is required."
-                            ]
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "ServerErrorResponse": {
-                "properties": {
-                    "success": {
-                        "type": "boolean",
-                        "example": false
-                    },
-                    "message": {
-                        "type": "string",
-                        "example": "Internal server error."
                     }
                 },
                 "type": "object"

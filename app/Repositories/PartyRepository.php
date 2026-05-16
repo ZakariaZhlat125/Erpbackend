@@ -15,6 +15,17 @@ class PartyRepository extends BaseRepository implements PartyRepositoryInterface
         parent::__construct($model);
     }
 
+    public function paginate(int $perPage = 15, array $columns = ['*'], array $relations = [], array $filters = []): LengthAwarePaginator
+    {
+        $query = $this->model->with($relations);
+
+        if (!empty($filters['organization_id'])) {
+            $query->where('organization_id', $filters['organization_id']);
+        }
+
+        return $query->paginate($perPage, $columns);
+    }
+
     public function findByOrganization(int $organizationId, int $perPage = 15): LengthAwarePaginator
     {
         return $this->model->withoutGlobalScopes()

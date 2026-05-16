@@ -2,176 +2,150 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\Currency\StoreCurrencyRequest;
+use App\Http\Requests\Currency\UpdateCurrencyRequest;
+use App\Http\Resources\CurrencyResource;
 use App\Services\CurrencyService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-class CurrencyController extends Controller
+class CurrencyController extends BaseApiController
 {
     public function __construct(
         protected CurrencyService $currencyService
     ) {}
 
-    /**
-     * Display a listing of currencies
-     */
-    public function index(Request $request): JsonResponse
+    public function index(): JsonResponse
     {
-        $perPage = $request->input('per_page', 15);
-        
-        if ($request->has('active_only')) {
+        if (request()->has('active_only')) {
             $currencies = $this->currencyService->getActive();
-            return response()->json(['data' => $currencies]);
+            return $this->successResponse(CurrencyResource::collection($currencies));
         }
 
-        $currencies = $this->currencyService->paginate($perPage);
-        return response()->json($currencies);
+        $data = $this->currencyService->getPaginated(
+            perPage: request()->integer('per_page', 15)
+        );
+
+        return $this->paginatedResponse($data);
     }
 
-    /**
-     * Store a newly created currency
-     */
-    public function store(Request $request): JsonResponse
+    public function store(StoreCurrencyRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'code' => 'required|string|size:3|unique:currencies,code',
-            'name' => 'required|string|max:255',
-            'symbol' => 'required|string|max:10',
-            'decimal_separator' => 'nullable|string|size:1',
-            'thousands_separator' => 'nullable|string|size:1',
-            'decimal_places' => 'nullable|integer|min:0|max:4',
-            'exchange_rate' => 'required|numeric|min:0',
-            'is_active' => 'boolean',
-        ]);
+        $currency = $this->currencyService->create($request->validated());
 
-        $currency = $this->currencyService->create($validated);
-
-        return response()->json([
-            'message' => 'Currency created successfully',
-            'data' => $currency
-        ], 201);
+        return $this->createdResponse(
+            new CurrencyResource($currency)
+        );
     }
 
-    /**
-     * Display the specified currency
-     */
     public function show(int $id): JsonResponse
     {
-        $currency = $this->currencyService->find($id);
-        return response()->json(['data' => $currency]);
+        $currency = $this->currencyService->findById($id);
+
+        if (!$currency) {
+            return $this->notFoundResponse();
+        }
+
+        return $this->successResponse(
+            new CurrencyResource($currency)
+        );
     }
 
-    /**
-     * Update the specified currency
-     */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(UpdateCurrencyRequest $request, int $id): JsonResponse
     {
-        $validated = $request->validate([
-            'code' => 'sometimes|string|size:3|unique:currencies,code,' . $id,
-            'name' => 'sometimes|string|max:255',
-            'symbol' => 'sometimes|string|max:10',
-            'decimal_separator' => 'nullable|string|size:1',
-            'thousands_separator' => 'nullable|string|size:1',
-            'decimal_places' => 'nullable|integer|min:0|max:4',
-            'exchange_rate' => 'sometimes|numeric|min:0',
-            'is_active' => 'boolean',
-        ]);
+        if (!$this->currencyService->exists($id)) {
+            return $this->notFoundResponse();
+        }
 
-        $currency = $this->currencyService->update($id, $validated);
+        $this->currencyService->update($id, $request->validated());
+        $currency = $this->currencyService->findById($id);
 
-        return response()->json([
-            'message' => 'Currency updated successfully',
-            'data' => $currency
-        ]);
+        return $this->successResponse(
+            new CurrencyResource($currency),
+            'Resource updated successfully'
+        );
     }
 
-    /**
-     * Remove the specified currency
-     */
     public function destroy(int $id): JsonResponse
     {
+        if (!$this->currencyService->exists($id)) {
+            return $this->notFoundResponse();
+        }
+
         $this->currencyService->delete($id);
 
-        return response()->json([
-            'message' => 'Currency deleted successfully'
-        ]);
+        return $this->noContentResponse();
     }
 
-    /**
-     * Get base currency
-     */
     public function getBase(): JsonResponse
     {
         $currency = $this->currencyService->getBaseCurrency();
-        
+
         if (!$currency) {
-            return response()->json([
-                'message' => 'No base currency set'
-            ], 404);
+            return $this->notFoundResponse('No base currency set');
         }
 
-        return response()->json(['data' => $currency]);
+        return $this->successResponse(
+            new CurrencyResource($currency)
+        );
     }
 
-    /**
-     * Set currency as base
-     */
     public function setBase(int $id): JsonResponse
     {
+        if (!$this->currencyService->exists($id)) {
+            return $this->notFoundResponse();
+        }
+
         try {
             $this->currencyService->setAsBase($id);
-            
-            return response()->json([
-                'message' => 'Base currency updated successfully'
-            ]);
+
+            return $this->successResponse(
+                null,
+                'Base currency updated successfully'
+            );
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 400);
+            return $this->errorResponse($e->getMessage(), 400);
         }
     }
 
-    /**
-     * Update exchange rate
-     */
-    public function updateRate(Request $request, int $id): JsonResponse
+    public function updateRate(int $id): JsonResponse
     {
-        $validated = $request->validate([
+        if (!$this->currencyService->exists($id)) {
+            return $this->notFoundResponse();
+        }
+
+        $validated = request()->validate([
             'exchange_rate' => 'required|numeric|min:0',
         ]);
 
         $this->currencyService->updateExchangeRate($id, $validated['exchange_rate']);
 
-        return response()->json([
-            'message' => 'Exchange rate updated successfully'
-        ]);
+        return $this->successResponse(
+            null,
+            'Exchange rate updated successfully'
+        );
     }
 
-    /**
-     * Toggle currency active status
-     */
     public function toggleActive(int $id): JsonResponse
     {
+        if (!$this->currencyService->exists($id)) {
+            return $this->notFoundResponse();
+        }
+
         try {
             $this->currencyService->toggleActive($id);
-            
-            return response()->json([
-                'message' => 'Currency status toggled successfully'
-            ]);
+
+            return $this->successResponse(
+                null,
+                'Currency status toggled successfully'
+            );
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 400);
+            return $this->errorResponse($e->getMessage(), 400);
         }
     }
 
-    /**
-     * Convert amount between currencies
-     */
-    public function convert(Request $request): JsonResponse
+    public function convert(): JsonResponse
     {
-        $validated = $request->validate([
+        $validated = request()->validate([
             'from_currency_id' => 'required|exists:currencies,id',
             'to_currency_id' => 'required|exists:currencies,id',
             'amount' => 'required|numeric|min:0',
@@ -183,22 +157,20 @@ class CurrencyController extends Controller
             $validated['amount']
         );
 
-        return response()->json([
-            'data' => [
-                'original_amount' => $validated['amount'],
-                'converted_amount' => $convertedAmount,
-                'from_currency_id' => $validated['from_currency_id'],
-                'to_currency_id' => $validated['to_currency_id'],
-            ]
+        return $this->successResponse([
+            'original_amount' => $validated['amount'],
+            'converted_amount' => $convertedAmount,
+            'from_currency_id' => $validated['from_currency_id'],
+            'to_currency_id' => $validated['to_currency_id'],
         ]);
     }
 
-    /**
-     * Get active currencies only
-     */
     public function active(): JsonResponse
     {
         $currencies = $this->currencyService->getActive();
-        return response()->json(['data' => $currencies]);
+
+        return $this->successResponse(
+            CurrencyResource::collection($currencies)
+        );
     }
 }

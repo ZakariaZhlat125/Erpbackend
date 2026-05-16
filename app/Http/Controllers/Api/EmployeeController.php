@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Employee\BulkUpdateStatusEmployeeRequest;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Http\Requests\Employee\UpdateEmployeeRequest;
 use App\Http\Resources\EmployeeResource;
@@ -114,13 +115,9 @@ class EmployeeController extends BaseApiController
         return $this->paginatedResponse($results);
     }
 
-    public function bulkUpdateStatus(): JsonResponse
+    public function bulkUpdateStatus(BulkUpdateStatusEmployeeRequest $request): JsonResponse
     {
-        $validated = request()->validate([
-            'employee_ids' => 'required|array|min:1',
-            'employee_ids.*' => 'required|integer|exists:employees,id',
-            'status' => 'required|in:active,inactive,terminated',
-        ]);
+        $validated = $request->validated();
 
         $count = $this->employeeService->updateMany(
             $validated['employee_ids'],

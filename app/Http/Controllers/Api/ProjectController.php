@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Project\StoreProjectRequest;
+use App\Http\Requests\Project\UpdateProgressProjectRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Services\ProjectService;
@@ -121,14 +122,14 @@ class ProjectController extends BaseApiController
         return $this->successResponse($stats, 'Project statistics retrieved');
     }
 
-    public function updateProgress(int $id): JsonResponse
+    public function updateProgress(UpdateProgressProjectRequest $request, int $id): JsonResponse
     {
-        $validated = request()->validate([
-            'progress_percent' => 'required|integer|min:0|max:100',
-        ]);
+        if (!$this->projectService->exists($id)) {
+            return $this->notFoundResponse();
+        }
 
         try {
-            $this->projectService->updateProgress($id, $validated['progress_percent']);
+            $this->projectService->updateProgress($id, $request->validated()['progress_percent']);
             $project = $this->projectService->findById($id);
 
             return $this->successResponse(

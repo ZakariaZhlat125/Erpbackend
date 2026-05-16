@@ -8,6 +8,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface PartyRepositoryInterface extends RepositoryInterface
 {
+    public function paginate(int $perPage = 15, array $columns = ['*'], array $relations = [], array $filters = []): LengthAwarePaginator;
+
     public function findByOrganization(int $organizationId, int $perPage = 15): LengthAwarePaginator;
 
     public function findByRole(string $role, int $perPage = 15): LengthAwarePaginator;

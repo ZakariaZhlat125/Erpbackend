@@ -85,12 +85,13 @@ use OpenApi\Attributes as OA;
 )]
 
 #[OA\Get(
-    path: "/parties",
+    path: "/organizations/{organization}/parties",
     summary: "List parties",
-    description: "Returns paginated list of parties with optional filters",
+    description: "Returns paginated list of parties for a specific organization",
     security: [["sanctum" => []]],
     tags: ["Parties"],
     parameters: [
+        new OA\Parameter(name: "organization", in: "path", description: "Organization ID", required: true, schema: new OA\Schema(type: "integer")),
         new OA\Parameter(name: "per_page", in: "query", required: false, schema: new OA\Schema(type: "integer", default: 15)),
         new OA\Parameter(name: "role", in: "query", required: false, schema: new OA\Schema(type: "string", enum: ["customer", "supplier", "agent", "contractor"])),
         new OA\Parameter(name: "is_active", in: "query", required: false, schema: new OA\Schema(type: "boolean")),
@@ -102,10 +103,13 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Post(
-    path: "/parties",
+    path: "/organizations/{organization}/parties",
     summary: "Create a party",
     security: [["sanctum" => []]],
     tags: ["Parties"],
+    parameters: [
+        new OA\Parameter(name: "organization", in: "path", description: "Organization ID", required: true, schema: new OA\Schema(type: "integer")),
+    ],
     requestBody: new OA\RequestBody(
         required: true,
         content: new OA\JsonContent(ref: "#/components/schemas/PartyStoreRequest")
@@ -117,12 +121,13 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Get(
-    path: "/parties/{id}",
+    path: "/organizations/{organization}/parties/{party}",
     summary: "Get a party",
     security: [["sanctum" => []]],
     tags: ["Parties"],
     parameters: [
-        new OA\Parameter(name: "id", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "organization", in: "path", description: "Organization ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "party", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
     ],
     responses: [
         new OA\Response(response: 200, description: "Party details", content: new OA\JsonContent(ref: "#/components/schemas/PartyResponse")),
@@ -131,12 +136,13 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Put(
-    path: "/parties/{id}",
+    path: "/organizations/{organization}/parties/{party}",
     summary: "Update a party",
     security: [["sanctum" => []]],
     tags: ["Parties"],
     parameters: [
-        new OA\Parameter(name: "id", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "organization", in: "path", description: "Organization ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "party", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
     ],
     requestBody: new OA\RequestBody(
         required: true,
@@ -150,12 +156,13 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Delete(
-    path: "/parties/{id}",
+    path: "/organizations/{organization}/parties/{party}",
     summary: "Delete a party",
     security: [["sanctum" => []]],
     tags: ["Parties"],
     parameters: [
-        new OA\Parameter(name: "id", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "organization", in: "path", description: "Organization ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "party", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
     ],
     responses: [
         new OA\Response(response: 204, description: "Party deleted successfully"),
@@ -164,12 +171,13 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Post(
-    path: "/parties/{id}/contacts",
+    path: "/organizations/{organization}/parties/{party}/contacts",
     summary: "Add a contact to a party",
     security: [["sanctum" => []]],
     tags: ["Parties"],
     parameters: [
-        new OA\Parameter(name: "id", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "organization", in: "path", description: "Organization ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "party", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
     ],
     requestBody: new OA\RequestBody(
         required: true,
@@ -183,12 +191,13 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Post(
-    path: "/parties/{id}/roles",
+    path: "/organizations/{organization}/parties/{party}/roles",
     summary: "Add a role to a party",
     security: [["sanctum" => []]],
     tags: ["Parties"],
     parameters: [
-        new OA\Parameter(name: "id", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "organization", in: "path", description: "Organization ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "party", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
     ],
     requestBody: new OA\RequestBody(
         required: true,
@@ -202,21 +211,25 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Get(
-    path: "/parties/statistics",
+    path: "/organizations/{organization}/parties/statistics",
     summary: "Get party statistics",
     security: [["sanctum" => []]],
     tags: ["Parties"],
+    parameters: [
+        new OA\Parameter(name: "organization", in: "path", description: "Organization ID", required: true, schema: new OA\Schema(type: "integer")),
+    ],
     responses: [
         new OA\Response(response: 200, description: "Party statistics"),
         new OA\Response(response: 401, description: "Unauthenticated"),
     ]
 )]
 #[OA\Get(
-    path: "/parties/search",
+    path: "/organizations/{organization}/parties/search",
     summary: "Search parties",
     security: [["sanctum" => []]],
     tags: ["Parties"],
     parameters: [
+        new OA\Parameter(name: "organization", in: "path", description: "Organization ID", required: true, schema: new OA\Schema(type: "integer")),
         new OA\Parameter(name: "q", in: "query", description: "Search term", required: true, schema: new OA\Schema(type: "string")),
     ],
     responses: [
@@ -225,13 +238,14 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Post(
-    path: "/parties/{id}/toggle-status",
+    path: "/organizations/{organization}/parties/{party}/toggle-status",
     summary: "Toggle party active status",
     description: "Activate or deactivate a party by toggling its is_active flag",
     security: [["sanctum" => []]],
     tags: ["Parties"],
     parameters: [
-        new OA\Parameter(name: "id", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "organization", in: "path", description: "Organization ID", required: true, schema: new OA\Schema(type: "integer")),
+        new OA\Parameter(name: "party", in: "path", description: "Party ID", required: true, schema: new OA\Schema(type: "integer")),
     ],
     responses: [
         new OA\Response(response: 200, description: "Status toggled successfully", content: new OA\JsonContent(ref: "#/components/schemas/PartyResponse")),
