@@ -26,3 +26,9 @@ require __DIR__.'/api/hr.php';
 require __DIR__.'/api/projects.php';
 
 require __DIR__.'/api/account_services.php';
+
+require __DIR__.'/api/users.php';
+
+require __DIR__.'/api/plans.php';
+
+require __DIR__.'/api/subscriptions.php';

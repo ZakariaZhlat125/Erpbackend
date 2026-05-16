@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api{{NamespacePrefix}};
 
-use App\Http\Requests\{{Name}}\Store{{Name}}Request;
-use App\Http\Requests\{{Name}}\Update{{Name}}Request;
+use App\Http\Controllers\Api\BaseApiController;
+use App\Http\Requests\{{RequestNamespace}}\Store{{Name}}Request;
+use App\Http\Requests\{{RequestNamespace}}\Update{{Name}}Request;
 use App\Http\Resources\{{Name}}Resource;
 use App\Services\{{Name}}Service;
 use Illuminate\Http\JsonResponse;

@@ -14,6 +14,8 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     protected array $repositories = [
         // \App\Repositories\Contracts\ExampleRepositoryInterface::class => \App\Repositories\ExampleRepository::class,
+        \App\Repositories\Contracts\SubscriptionRepositoryInterface::class => \App\Repositories\SubscriptionRepository::class,
+        \App\Repositories\Contracts\PlanRepositoryInterface::class => \App\Repositories\PlanRepository::class,
         \App\Repositories\Contracts\PlaneRepositoryInterface::class => \App\Repositories\PlaneRepository::class,
         \App\Repositories\Contracts\UserRepositoryInterface::class => \App\Repositories\UserRepository::class,
         \App\Repositories\Contracts\AccountServiceRepositoryInterface::class => \App\Repositories\AccountServiceRepository::class,

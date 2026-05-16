@@ -16,6 +16,582 @@
         }
     ],
     "paths": {
+        "/api/admin/plans": {
+            "get": {
+                "tags": [
+                    "Admin/Plans"
+                ],
+                "summary": "Get all plans",
+                "operationId": "4b58fcd6d13184c5bf03c38a882f8a8e",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin/Plans"
+                ],
+                "summary": "Create a new plan",
+                "operationId": "74e431da7a2c9aea218a525ed2bff36a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePlanRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Plan created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/plans/{id}/change-status": {
+            "patch": {
+                "tags": [
+                    "Admin/Plans"
+                ],
+                "summary": "Toggle plan active status",
+                "operationId": "19d30f7ec0c5a558c41861c08d7ffd98",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Status updated"
+                    },
+                    "404": {
+                        "description": "Plan not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/subscriptions": {
+            "get": {
+                "tags": [
+                    "Admin/Subscriptions"
+                ],
+                "summary": "Get all subscriptions",
+                "operationId": "35cad7b3411a18e5aa61df44434bb2f7",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin/Subscriptions"
+                ],
+                "summary": "Create a new subscription",
+                "operationId": "f0596984bf1b4c4427e9146fe3649154",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreSubscriptionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Subscription created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/subscriptions/{id}": {
+            "get": {
+                "tags": [
+                    "Admin/Subscriptions"
+                ],
+                "summary": "Get subscription by ID",
+                "operationId": "57e14c8f4d4c20e65c910dffb03566f3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin/Subscriptions"
+                ],
+                "summary": "Update subscription",
+                "operationId": "24c874a70f93de774a7294ddea27501f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSubscriptionRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Subscription updated"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin/Subscriptions"
+                ],
+                "summary": "Delete subscription",
+                "operationId": "f19ba63504cde0835137300fe6a85015",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Subscription deleted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/subscriptions/subscriptions/{id}/change-status": {
+            "patch": {
+                "tags": [
+                    "Admin/Subscriptions"
+                ],
+                "summary": "Change subscription status",
+                "operationId": "81690d1efd7164bb8508f4b39f380128",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangeStatusRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status changed"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/subscriptions/subscriptions/subscribe-user": {
+            "post": {
+                "tags": [
+                    "Admin/Subscriptions"
+                ],
+                "summary": "Subscribe a user to a plan",
+                "operationId": "4c4aca89a46851632643dab40d5c7c0b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SubscribeUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User subscribed"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/subscriptions/subscriptions/{id}/renew": {
+            "post": {
+                "tags": [
+                    "Admin/Subscriptions"
+                ],
+                "summary": "Renew subscription",
+                "operationId": "b43c5dce393fd1968e563ebb7a0026e7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subscription renewed"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/subscriptions/subscriptions/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Admin/Subscriptions"
+                ],
+                "summary": "Cancel subscription",
+                "operationId": "2f36368eea41064a2515683fe32e94fb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UnsubscribeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Subscription cancelled"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/users": {
+            "get": {
+                "tags": [
+                    "Admin/Users"
+                ],
+                "summary": "Get all users",
+                "operationId": "9ded17315e13756cd593b5840cd39a26",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin/Users"
+                ],
+                "summary": "Create a new user",
+                "operationId": "f6f90d5fbbe24f66eb2b43901e0d3f38",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StoreUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/users/{id}": {
+            "get": {
+                "tags": [
+                    "Admin/Users"
+                ],
+                "summary": "Get user by ID",
+                "operationId": "c6ac2250cb22823f621026268b66f471",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin/Users"
+                ],
+                "summary": "Update user",
+                "operationId": "22692373e5a35c609175c1e6441b58ca",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin/Users"
+                ],
+                "summary": "Delete user",
+                "operationId": "fdbad6312957544572f3b379b96abad0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User deleted"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/auth/login": {
             "post": {
                 "tags": [
@@ -327,6 +903,170 @@
                         }
                     }
                 }
+            }
+        },
+        "/api/subscriptions/my-subscription": {
+            "get": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Get user's active subscription",
+                "operationId": "df4e477c659c5ab361db45719030f276",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/subscribe": {
+            "post": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Subscribe to a plan",
+                "operationId": "cee38457a3adcffb4b35819ef00a7989",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SubscribeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Subscription created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/subscriptions/{id}/unsubscribe": {
+            "post": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Cancel subscription",
+                "operationId": "70338943fa35f95b712c42928b042659",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UnsubscribeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Subscription cancelled"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/subscriptions/{id}/renew": {
+            "post": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Renew subscription",
+                "operationId": "f5b2e6100dddb36231982c41b37bbdaa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subscription renewed"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/subscriptions/my-subscription-history": {
+            "get": {
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Get subscription history",
+                "operationId": "8dd03c67c669efa19197581c439c06e6",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         },
         "/organizations/{organization}/branches": {
@@ -1484,46 +2224,6 @@
     },
     "components": {
         "schemas": {
-            "User": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "example": "1"
-                    },
-                    "email": {
-                        "type": "string",
-                        "format": "email",
-                        "example": "admin@example.com"
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "John Doe"
-                    },
-                    "avatar": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "roles": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "permissions": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "establishments": {
-                        "type": "array",
-                        "items": {
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
             "AuthTokenPayload": {
                 "properties": {
                     "user": {
@@ -2279,6 +2979,722 @@
                     }
                 },
                 "type": "object"
+            },
+            "Plan": {
+                "required": [
+                    "id",
+                    "name",
+                    "price",
+                    "billing_cycle"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Premium Plan"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Full access to all features",
+                        "nullable": true
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 99.99
+                    },
+                    "billing_cycle": {
+                        "type": "string",
+                        "example": "monthly",
+                        "enum": [
+                            "monthly",
+                            "yearly",
+                            "lifetime"
+                        ]
+                    },
+                    "max_users": {
+                        "type": "integer",
+                        "example": 50,
+                        "nullable": true
+                    },
+                    "max_branches": {
+                        "type": "integer",
+                        "example": 10,
+                        "nullable": true
+                    },
+                    "features": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "Advanced Reporting",
+                            "API Access",
+                            "Priority Support"
+                        ],
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_popular": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "StorePlanRequest": {
+                "required": [
+                    "name",
+                    "price",
+                    "billing_cycle"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Premium Plan"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Full access to all features",
+                        "nullable": true
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 99.99
+                    },
+                    "billing_cycle": {
+                        "type": "string",
+                        "example": "monthly",
+                        "enum": [
+                            "monthly",
+                            "yearly",
+                            "lifetime"
+                        ]
+                    },
+                    "max_users": {
+                        "type": "integer",
+                        "example": 50,
+                        "nullable": true
+                    },
+                    "max_branches": {
+                        "type": "integer",
+                        "example": 10,
+                        "nullable": true
+                    },
+                    "features": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "Advanced Reporting",
+                            "API Access"
+                        ],
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_popular": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "example": 0
+                    }
+                },
+                "type": "object"
+            },
+            "UpdatePlanRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Premium Plan"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Updated description",
+                        "nullable": true
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 89.99
+                    },
+                    "billing_cycle": {
+                        "type": "string",
+                        "example": "yearly",
+                        "enum": [
+                            "monthly",
+                            "yearly",
+                            "lifetime"
+                        ]
+                    },
+                    "max_users": {
+                        "type": "integer",
+                        "example": 100,
+                        "nullable": true
+                    },
+                    "max_branches": {
+                        "type": "integer",
+                        "example": 20,
+                        "nullable": true
+                    },
+                    "features": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "All Features"
+                        ],
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_popular": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "Subscription": {
+                "required": [
+                    "id",
+                    "user_id",
+                    "plan_id",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user": {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "John Doe"
+                            },
+                            "email": {
+                                "type": "string",
+                                "example": "john@example.com"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "plan_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "plan": {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Premium Plan"
+                            },
+                            "price": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 99.99
+                            },
+                            "billing_cycle": {
+                                "type": "string",
+                                "example": "monthly"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-01-01"
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-02-01"
+                    },
+                    "trial_ends_at": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-01-15",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "active",
+                        "enum": [
+                            "active",
+                            "expired",
+                            "cancelled",
+                            "trial"
+                        ]
+                    },
+                    "auto_renew": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "price_paid": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 99.99
+                    },
+                    "billing_cycle": {
+                        "type": "string",
+                        "example": "monthly"
+                    },
+                    "cancelled_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "cancellation_reason": {
+                        "type": "string",
+                        "example": "Too expensive",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_expired": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "is_cancelled": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreSubscriptionRequest": {
+                "required": [
+                    "user_id",
+                    "plan_id",
+                    "start_date",
+                    "end_date",
+                    "status",
+                    "price_paid",
+                    "billing_cycle"
+                ],
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "plan_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-01-01"
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-02-01"
+                    },
+                    "trial_ends_at": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-01-15",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "active",
+                        "enum": [
+                            "active",
+                            "expired",
+                            "cancelled",
+                            "trial"
+                        ]
+                    },
+                    "auto_renew": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "price_paid": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 99.99
+                    },
+                    "billing_cycle": {
+                        "type": "string",
+                        "example": "monthly",
+                        "enum": [
+                            "monthly",
+                            "yearly",
+                            "lifetime"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateSubscriptionRequest": {
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "plan_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-01-01"
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-02-01"
+                    },
+                    "trial_ends_at": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-01-15",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "active",
+                        "enum": [
+                            "active",
+                            "expired",
+                            "cancelled",
+                            "trial"
+                        ]
+                    },
+                    "auto_renew": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "price_paid": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 99.99
+                    },
+                    "billing_cycle": {
+                        "type": "string",
+                        "example": "monthly",
+                        "enum": [
+                            "monthly",
+                            "yearly",
+                            "lifetime"
+                        ]
+                    },
+                    "cancellation_reason": {
+                        "type": "string",
+                        "example": "Changed my mind",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "SubscribeRequest": {
+                "required": [
+                    "plan_id"
+                ],
+                "properties": {
+                    "plan_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "is_trial": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                },
+                "type": "object"
+            },
+            "UnsubscribeRequest": {
+                "properties": {
+                    "reason": {
+                        "type": "string",
+                        "example": "Too expensive",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "ChangeStatusRequest": {
+                "required": [
+                    "status"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "active",
+                        "enum": [
+                            "active",
+                            "expired",
+                            "cancelled",
+                            "trial"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "SubscribeUserRequest": {
+                "required": [
+                    "user_id",
+                    "plan_id"
+                ],
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "plan_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "is_trial": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "required": [
+                    "id",
+                    "name",
+                    "email"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+1234567890",
+                        "nullable": true
+                    },
+                    "organization_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "branch_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "avatar_path": {
+                        "type": "string",
+                        "example": "/avatars/user.jpg",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "admin",
+                            "manager"
+                        ]
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "StoreUserRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+1234567890",
+                        "nullable": true
+                    },
+                    "organization_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "branch_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "avatar_path": {
+                        "type": "string",
+                        "example": "/avatars/user.jpg",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "admin"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateUserRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "newpassword123",
+                        "nullable": true
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "newpassword123",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+1234567890",
+                        "nullable": true
+                    },
+                    "organization_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "branch_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "avatar_path": {
+                        "type": "string",
+                        "example": "/avatars/user.jpg",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "manager"
+                        ]
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -2291,6 +3707,14 @@
         }
     },
     "tags": [
+        {
+            "name": "Admin/Subscriptions",
+            "description": "Admin subscription management endpoints"
+        },
+        {
+            "name": "Subscriptions",
+            "description": "User subscription endpoints"
+        },
         {
             "name": "Authentication",
             "description": "User authentication and authorization"
@@ -2306,6 +3730,14 @@
         {
             "name": "Parties",
             "description": "Customer, Supplier, and other party management"
+        },
+        {
+            "name": "Admin/Plans",
+            "description": "Admin plan management endpoints"
+        },
+        {
+            "name": "Admin/Users",
+            "description": "Admin user management endpoints"
         }
     ]
 }

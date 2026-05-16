@@ -8,7 +8,8 @@ use Illuminate\Filesystem\Filesystem;
 
 class MakeServiceCommand extends Command
 {
-    protected $signature = 'make:service {name : The name of the microservice (e.g. Product)}
+    protected $signature = 'make:service {name : The name of the microservice (e.g. Product or Admin/Product)}
+                            {--folder= : Optional folder path for Controller and Requests (e.g. Admin)}
                             {--m|migration : Create a migration file}';
 
     protected $description = 'Create a new microservice with Repository pattern (Model, Controller, Repository, Service, Requests, Resource, Routes)';
@@ -16,6 +17,10 @@ class MakeServiceCommand extends Command
     protected Filesystem $files;
 
     protected array $replacements = [];
+
+    protected string $folderPath = '';
+    protected string $namespace = '';
+    protected string $baseName = '';
 
     public function __construct(Filesystem $files)
     {
@@ -25,20 +30,28 @@ class MakeServiceCommand extends Command
 
     public function handle(): int
     {
-        $name = Str::studly($this->argument('name'));
+        $this->parseFolderStructure();
+        
+        $name = Str::studly($this->baseName);
         $plural = Str::pluralStudly($name);
         $camel = Str::camel($name);
         $camelPlural = Str::camel($plural);
         $snake = Str::snake($name);
         $snakePlural = Str::snake($plural);
 
+        $requestNamespace = $this->folderPath ? "{$this->folderPath}\\{$name}" : $name;
+        
         $this->replacements = [
-            '{{Name}}'        => $name,
-            '{{Plural}}'      => $plural,
-            '{{camel}}'       => $camel,
-            '{{camelPlural}}' => $camelPlural,
-            '{{snake}}'       => $snake,
-            '{{snakePlural}}' => $snakePlural,
+            '{{Name}}'              => $name,
+            '{{Plural}}'            => $plural,
+            '{{camel}}'             => $camel,
+            '{{camelPlural}}'       => $camelPlural,
+            '{{snake}}'             => $snake,
+            '{{snakePlural}}'       => $snakePlural,
+            '{{Namespace}}'         => $this->namespace,
+            '{{FolderPath}}'        => $this->folderPath,
+            '{{NamespacePrefix}}'   => $this->namespace ? "\\{$this->namespace}" : '',
+            '{{RequestNamespace}}'  => $requestNamespace,
         ];
 
         $this->info("Creating microservice: {$name}");
@@ -48,10 +61,13 @@ class MakeServiceCommand extends Command
         $this->generateFile('repository-interface', app_path("Repositories/Contracts/{$name}RepositoryInterface.php"), "Repository Interface [{$name}RepositoryInterface]");
         $this->generateFile('repository', app_path("Repositories/{$name}Repository.php"), "Repository [{$name}Repository]");
         $this->generateFile('service', app_path("Services/{$name}Service.php"), "Service [{$name}Service]");
-        $this->generateFile('store-request', app_path("Http/Requests/{$name}/Store{$name}Request.php"), "Request [Store{$name}Request]");
-        $this->generateFile('update-request', app_path("Http/Requests/{$name}/Update{$name}Request.php"), "Request [Update{$name}Request]");
+        $requestPath = $this->folderPath ? "{$this->folderPath}/{$name}" : $name;
+        $controllerPath = $this->folderPath ? "Api/{$this->folderPath}" : "Api";
+        
+        $this->generateFile('store-request', app_path("Http/Requests/{$requestPath}/Store{$name}Request.php"), "Request [Store{$name}Request]");
+        $this->generateFile('update-request', app_path("Http/Requests/{$requestPath}/Update{$name}Request.php"), "Request [Update{$name}Request]");
         $this->generateFile('resource', app_path("Http/Resources/{$name}Resource.php"), "Resource [{$name}Resource]");
-        $this->generateFile('controller', app_path("Http/Controllers/Api/{$name}Controller.php"), "Controller [{$name}Controller]");
+        $this->generateFile('controller', app_path("Http/Controllers/{$controllerPath}/{$name}Controller.php"), "Controller [{$name}Controller]");
         $this->generateRouteFile($snakePlural);
         $this->registerRoutes($snakePlural);
         $this->registerRepository($name);
@@ -64,6 +80,9 @@ class MakeServiceCommand extends Command
         $this->newLine();
         $this->info("Microservice [{$name}] created successfully!");
         $this->newLine();
+        $requestPath = $this->folderPath ? "{$this->folderPath}/{$name}" : $name;
+        $controllerPath = $this->folderPath ? "Api/{$this->folderPath}" : "Api";
+        
         $this->table(
             ['Component', 'Path'],
             [
@@ -71,9 +90,9 @@ class MakeServiceCommand extends Command
                 ['Repository Interface', "app/Repositories/Contracts/{$name}RepositoryInterface.php"],
                 ['Repository', "app/Repositories/{$name}Repository.php"],
                 ['Service', "app/Services/{$name}Service.php"],
-                ['Controller', "app/Http/Controllers/Api/{$name}Controller.php"],
-                ['Store Request', "app/Http/Requests/{$name}/Store{$name}Request.php"],
-                ['Update Request', "app/Http/Requests/{$name}/Update{$name}Request.php"],
+                ['Controller', "app/Http/Controllers/{$controllerPath}/{$name}Controller.php"],
+                ['Store Request', "app/Http/Requests/{$requestPath}/Store{$name}Request.php"],
+                ['Update Request', "app/Http/Requests/{$requestPath}/Update{$name}Request.php"],
                 ['Resource', "app/Http/Resources/{$name}Resource.php"],
                 ['Routes', "routes/api/{$snakePlural}.php"],
             ]
@@ -184,5 +203,27 @@ class MakeServiceCommand extends Command
         ]);
     }
 
+    protected function parseFolderStructure(): void
+    {
+        $nameArgument = $this->argument('name');
+        $folderOption = $this->option('folder');
 
+        if ($folderOption) {
+            $this->folderPath = str_replace('/', '\\', trim($folderOption, '/\\'));
+            $this->baseName = $nameArgument;
+        } elseif (str_contains($nameArgument, '/') || str_contains($nameArgument, '\\')) {
+            $parts = preg_split('/[\/\\\\]+/', $nameArgument);
+            $this->baseName = array_pop($parts);
+            $this->folderPath = implode('\\', $parts);
+        } else {
+            $this->baseName = $nameArgument;
+            $this->folderPath = '';
+        }
+
+        $this->namespace = str_replace('/', '\\', $this->folderPath);
+        
+        if ($this->folderPath) {
+            $this->info("Using folder structure: {$this->folderPath}");
+        }
+    }
 }

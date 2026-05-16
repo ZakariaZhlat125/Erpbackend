@@ -10,5 +10,8 @@ class SwaggerAnnotations
         \App\Swagger\OrganizationSchemas::class,
         \App\Swagger\BranchSchemas::class,
         \App\Swagger\PartySchemas::class,
+        \App\Swagger\UserSchemas::class,
+        \App\Swagger\PlanSchemas::class,
+        \App\Swagger\SubscriptionSchemas::class,
     ];
 }
