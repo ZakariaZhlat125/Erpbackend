@@ -16,14 +16,23 @@
         }
     ],
     "paths": {
-        "/api/admin/plans": {
+        "/admin/plans": {
             "get": {
                 "tags": [
                     "Admin/Plans"
                 ],
                 "summary": "Get all plans",
-                "operationId": "4b58fcd6d13184c5bf03c38a882f8a8e",
+                "operationId": "3a574839b7fda9298351f6a1c03951bd",
                 "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
                     {
                         "name": "per_page",
                         "in": "query",
@@ -53,7 +62,7 @@
                     "Admin/Plans"
                 ],
                 "summary": "Create a new plan",
-                "operationId": "74e431da7a2c9aea218a525ed2bff36a",
+                "operationId": "54d7c6876e63136bc49fa34fc455ee2d",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -79,13 +88,118 @@
                 ]
             }
         },
-        "/api/admin/plans/{id}/change-status": {
+        "/admin/plans/{id}": {
+            "get": {
+                "tags": [
+                    "Admin/Plans"
+                ],
+                "summary": "Get plan by ID",
+                "operationId": "71fa68954d0f3d6df707a81b0a5212dc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "404": {
+                        "description": "Plan not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin/Plans"
+                ],
+                "summary": "Update plan",
+                "operationId": "b1ba04d75bd4103a12ee9afd6b184b4f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePlanRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Plan updated"
+                    },
+                    "404": {
+                        "description": "Plan not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin/Plans"
+                ],
+                "summary": "Delete plan",
+                "operationId": "b84f60abd258032aed1e404e89aac1d1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Plan deleted"
+                    },
+                    "404": {
+                        "description": "Plan not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/admin/plans/{id}/change-status": {
             "patch": {
                 "tags": [
                     "Admin/Plans"
                 ],
                 "summary": "Toggle plan active status",
-                "operationId": "19d30f7ec0c5a558c41861c08d7ffd98",
+                "operationId": "3e59f31f2e985215407167fa5de4d010",
                 "parameters": [
                     {
                         "name": "id",
@@ -111,13 +225,13 @@
                 ]
             }
         },
-        "/api/admin/subscriptions": {
+        "/admin/subscriptions": {
             "get": {
                 "tags": [
                     "Admin/Subscriptions"
                 ],
                 "summary": "Get all subscriptions",
-                "operationId": "35cad7b3411a18e5aa61df44434bb2f7",
+                "operationId": "2828f5abbe6deff369927421069e5ad3",
                 "parameters": [
                     {
                         "name": "per_page",
@@ -148,7 +262,7 @@
                     "Admin/Subscriptions"
                 ],
                 "summary": "Create a new subscription",
-                "operationId": "f0596984bf1b4c4427e9146fe3649154",
+                "operationId": "484726d72b43784188b9fed02f92e48a",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -174,13 +288,13 @@
                 ]
             }
         },
-        "/api/admin/subscriptions/{id}": {
+        "/admin/subscriptions/{id}": {
             "get": {
                 "tags": [
                     "Admin/Subscriptions"
                 ],
                 "summary": "Get subscription by ID",
-                "operationId": "57e14c8f4d4c20e65c910dffb03566f3",
+                "operationId": "9db9b0309a4aaf2df09b96f26566298e",
                 "parameters": [
                     {
                         "name": "id",
@@ -210,7 +324,7 @@
                     "Admin/Subscriptions"
                 ],
                 "summary": "Update subscription",
-                "operationId": "24c874a70f93de774a7294ddea27501f",
+                "operationId": "ac152c8291c5b795a9a463776574d8dc",
                 "parameters": [
                     {
                         "name": "id",
@@ -250,7 +364,7 @@
                     "Admin/Subscriptions"
                 ],
                 "summary": "Delete subscription",
-                "operationId": "f19ba63504cde0835137300fe6a85015",
+                "operationId": "292057c0e86164ac240aac00c75c2904",
                 "parameters": [
                     {
                         "name": "id",
@@ -276,13 +390,13 @@
                 ]
             }
         },
-        "/api/admin/subscriptions/subscriptions/{id}/change-status": {
+        "/admin/subscriptions/subscriptions/{id}/change-status": {
             "patch": {
                 "tags": [
                     "Admin/Subscriptions"
                 ],
                 "summary": "Change subscription status",
-                "operationId": "81690d1efd7164bb8508f4b39f380128",
+                "operationId": "d02b67486ae4bf74b7f3d7878a347ce7",
                 "parameters": [
                     {
                         "name": "id",
@@ -321,13 +435,13 @@
                 ]
             }
         },
-        "/api/admin/subscriptions/subscriptions/subscribe-user": {
+        "/admin/subscriptions/subscriptions/subscribe-user": {
             "post": {
                 "tags": [
                     "Admin/Subscriptions"
                 ],
                 "summary": "Subscribe a user to a plan",
-                "operationId": "4c4aca89a46851632643dab40d5c7c0b",
+                "operationId": "182766e8e6c73ac1d1d9b0e3fc50cfd6",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -353,13 +467,13 @@
                 ]
             }
         },
-        "/api/admin/subscriptions/subscriptions/{id}/renew": {
+        "/admin/subscriptions/subscriptions/{id}/renew": {
             "post": {
                 "tags": [
                     "Admin/Subscriptions"
                 ],
                 "summary": "Renew subscription",
-                "operationId": "b43c5dce393fd1968e563ebb7a0026e7",
+                "operationId": "dd5aeae38dc4f3ffdf153ea5aa96362a",
                 "parameters": [
                     {
                         "name": "id",
@@ -385,13 +499,13 @@
                 ]
             }
         },
-        "/api/admin/subscriptions/subscriptions/{id}/cancel": {
+        "/admin/subscriptions/subscriptions/{id}/cancel": {
             "post": {
                 "tags": [
                     "Admin/Subscriptions"
                 ],
                 "summary": "Cancel subscription",
-                "operationId": "2f36368eea41064a2515683fe32e94fb",
+                "operationId": "a579cfb4e60eb774e238745f0a5d8902",
                 "parameters": [
                     {
                         "name": "id",
@@ -427,13 +541,13 @@
                 ]
             }
         },
-        "/api/admin/users": {
+        "/admin/users": {
             "get": {
                 "tags": [
                     "Admin/Users"
                 ],
                 "summary": "Get all users",
-                "operationId": "9ded17315e13756cd593b5840cd39a26",
+                "operationId": "80c2e09d986ac49741d14d9fe9e3f35b",
                 "parameters": [
                     {
                         "name": "per_page",
@@ -464,7 +578,7 @@
                     "Admin/Users"
                 ],
                 "summary": "Create a new user",
-                "operationId": "f6f90d5fbbe24f66eb2b43901e0d3f38",
+                "operationId": "1e82bed5b21b4aa665386e9b5fd9905c",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -490,13 +604,13 @@
                 ]
             }
         },
-        "/api/admin/users/{id}": {
+        "/admin/users/{id}": {
             "get": {
                 "tags": [
                     "Admin/Users"
                 ],
                 "summary": "Get user by ID",
-                "operationId": "c6ac2250cb22823f621026268b66f471",
+                "operationId": "ff9a028aa81cb83331c67f3ba97760b7",
                 "parameters": [
                     {
                         "name": "id",
@@ -526,7 +640,7 @@
                     "Admin/Users"
                 ],
                 "summary": "Update user",
-                "operationId": "22692373e5a35c609175c1e6441b58ca",
+                "operationId": "3ce11e641d5a760a2834b41827a1020a",
                 "parameters": [
                     {
                         "name": "id",
@@ -566,7 +680,7 @@
                     "Admin/Users"
                 ],
                 "summary": "Delete user",
-                "operationId": "fdbad6312957544572f3b379b96abad0",
+                "operationId": "e7dec21c96ad026e502b55b08083177d",
                 "parameters": [
                     {
                         "name": "id",
@@ -905,13 +1019,13 @@
                 }
             }
         },
-        "/api/subscriptions/my-subscription": {
+        "/subscriptions/my-subscription": {
             "get": {
                 "tags": [
                     "Subscriptions"
                 ],
                 "summary": "Get user's active subscription",
-                "operationId": "df4e477c659c5ab361db45719030f276",
+                "operationId": "4306600ccbc7b0d354e30e6b7d65b988",
                 "responses": {
                     "200": {
                         "description": "Success"
@@ -930,13 +1044,13 @@
                 ]
             }
         },
-        "/api/subscriptions/subscribe": {
+        "/subscriptions/subscribe": {
             "post": {
                 "tags": [
                     "Subscriptions"
                 ],
                 "summary": "Subscribe to a plan",
-                "operationId": "cee38457a3adcffb4b35819ef00a7989",
+                "operationId": "6f715d1c16b24e562ba3d21624c13df5",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -962,13 +1076,13 @@
                 ]
             }
         },
-        "/api/subscriptions/subscriptions/{id}/unsubscribe": {
+        "/subscriptions/{id}/unsubscribe": {
             "post": {
                 "tags": [
                     "Subscriptions"
                 ],
                 "summary": "Cancel subscription",
-                "operationId": "70338943fa35f95b712c42928b042659",
+                "operationId": "929055c655c7387ad3a264a46ddfad42",
                 "parameters": [
                     {
                         "name": "id",
@@ -1004,13 +1118,13 @@
                 ]
             }
         },
-        "/api/subscriptions/subscriptions/{id}/renew": {
+        "/subscriptions/{id}/renew": {
             "post": {
                 "tags": [
                     "Subscriptions"
                 ],
                 "summary": "Renew subscription",
-                "operationId": "f5b2e6100dddb36231982c41b37bbdaa",
+                "operationId": "2a05505aca0ce26c53063e334d7ce090",
                 "parameters": [
                     {
                         "name": "id",
@@ -1036,13 +1150,13 @@
                 ]
             }
         },
-        "/api/subscriptions/my-subscription-history": {
+        "/subscriptions/my-subscription-history": {
             "get": {
                 "tags": [
                     "Subscriptions"
                 ],
                 "summary": "Get subscription history",
-                "operationId": "8dd03c67c669efa19197581c439c06e6",
+                "operationId": "016252cc70bc75368774179cf2bd89cb",
                 "parameters": [
                     {
                         "name": "per_page",

@@ -17,7 +17,7 @@ class UserController extends BaseApiController
     ) {}
 
     #[OA\Get(
-        path: '/api/admin/users',
+        path: '/admin/users',
         summary: 'Get all users',
         tags: ['Admin/Users'],
         security: [['sanctum' => []]],
@@ -39,7 +39,7 @@ class UserController extends BaseApiController
     }
 
     #[OA\Post(
-        path: '/api/admin/users',
+        path: '/admin/users',
         summary: 'Create a new user',
         tags: ['Admin/Users'],
         security: [['sanctum' => []]],
@@ -62,7 +62,7 @@ class UserController extends BaseApiController
     }
 
     #[OA\Get(
-        path: '/api/admin/users/{id}',
+        path: '/admin/users/{id}',
         summary: 'Get user by ID',
         tags: ['Admin/Users'],
         security: [['sanctum' => []]],
@@ -88,7 +88,7 @@ class UserController extends BaseApiController
     }
 
     #[OA\Put(
-        path: '/api/admin/users/{id}',
+        path: '/admin/users/{id}',
         summary: 'Update user',
         tags: ['Admin/Users'],
         security: [['sanctum' => []]],
@@ -120,7 +120,7 @@ class UserController extends BaseApiController
     }
 
     #[OA\Delete(
-        path: '/api/admin/users/{id}',
+        path: '/admin/users/{id}',
         summary: 'Delete user',
         tags: ['Admin/Users'],
         security: [['sanctum' => []]],

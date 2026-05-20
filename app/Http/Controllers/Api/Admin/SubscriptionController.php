@@ -18,7 +18,7 @@ class SubscriptionController extends BaseApiController
     ) {}
 
     #[OA\Get(
-        path: '/api/admin/subscriptions',
+        path: '/admin/subscriptions',
         summary: 'Get all subscriptions',
         tags: ['Admin/Subscriptions'],
         security: [['sanctum' => []]],
@@ -40,7 +40,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Post(
-        path: '/api/admin/subscriptions',
+        path: '/admin/subscriptions',
         summary: 'Create a new subscription',
         tags: ['Admin/Subscriptions'],
         security: [['sanctum' => []]],
@@ -63,7 +63,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Get(
-        path: '/api/admin/subscriptions/{id}',
+        path: '/admin/subscriptions/{id}',
         summary: 'Get subscription by ID',
         tags: ['Admin/Subscriptions'],
         security: [['sanctum' => []]],
@@ -89,7 +89,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Put(
-        path: '/api/admin/subscriptions/{id}',
+        path: '/admin/subscriptions/{id}',
         summary: 'Update subscription',
         tags: ['Admin/Subscriptions'],
         security: [['sanctum' => []]],
@@ -121,7 +121,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Delete(
-        path: '/api/admin/subscriptions/{id}',
+        path: '/admin/subscriptions/{id}',
         summary: 'Delete subscription',
         tags: ['Admin/Subscriptions'],
         security: [['sanctum' => []]],
@@ -145,7 +145,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Patch(
-        path: '/api/admin/subscriptions/subscriptions/{id}/change-status',
+        path: '/admin/subscriptions/subscriptions/{id}/change-status',
         summary: 'Change subscription status',
         tags: ['Admin/Subscriptions'],
         security: [['sanctum' => []]],
@@ -184,7 +184,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Post(
-        path: '/api/admin/subscriptions/subscriptions/subscribe-user',
+        path: '/admin/subscriptions/subscriptions/subscribe-user',
         summary: 'Subscribe a user to a plan',
         tags: ['Admin/Subscriptions'],
         security: [['sanctum' => []]],
@@ -218,7 +218,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Post(
-        path: '/api/admin/subscriptions/subscriptions/{id}/renew',
+        path: '/admin/subscriptions/subscriptions/{id}/renew',
         summary: 'Renew subscription',
         tags: ['Admin/Subscriptions'],
         security: [['sanctum' => []]],
@@ -245,7 +245,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Post(
-        path: '/api/admin/subscriptions/subscriptions/{id}/cancel',
+        path: '/admin/subscriptions/subscriptions/{id}/cancel',
         summary: 'Cancel subscription',
         tags: ['Admin/Subscriptions'],
         security: [['sanctum' => []]],

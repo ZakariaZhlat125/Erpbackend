@@ -4,12 +4,12 @@ use App\Http\Controllers\Api\Admin\SubscriptionController as AdminSubscriptionCo
 use App\Http\Controllers\Api\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->prefix('subscriptions')->group(function () {
     Route::get('my-subscription', [SubscriptionController::class, 'mySubscription']);
     Route::get('my-subscription-history', [SubscriptionController::class, 'myHistory']);
     Route::post('subscribe', [SubscriptionController::class, 'subscribe']);
-    Route::post('subscriptions/{id}/unsubscribe', [SubscriptionController::class, 'unsubscribe']);
-    Route::post('subscriptions/{id}/renew', [SubscriptionController::class, 'renew']);
+    Route::post('{id}/unsubscribe', [SubscriptionController::class, 'unsubscribe']);
+    Route::post('{id}/renew', [SubscriptionController::class, 'renew']);
 });
 
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {

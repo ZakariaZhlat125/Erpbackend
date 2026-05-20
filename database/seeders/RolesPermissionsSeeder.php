@@ -61,6 +61,7 @@ class RolesPermissionsSeeder extends Seeder
             'time_entries:read', 'time_entries:write',
             'settings:read', 'settings:write',
             'audit:read',
+            'plans:read', 'plans:write', 'plans:delete',
         ]);
 
         // OWNER_ORGANIZATION - has full permissions within their organization
@@ -88,6 +89,7 @@ class RolesPermissionsSeeder extends Seeder
             'time_entries:read', 'time_entries:write',
             'settings:read', 'settings:write',
             'audit:read',
+            'plans:read',
         ]);
 
         // Manager - limited permissions
@@ -216,6 +218,10 @@ class RolesPermissionsSeeder extends Seeder
             ['module' => 'settings', 'action' => 'write', 'name' => 'settings:write', 'label' => 'Modify Settings'],
             
             ['module' => 'audit', 'action' => 'read', 'name' => 'audit:read', 'label' => 'View Audit Logs'],
+
+            ['module' => 'plans', 'action' => 'read', 'name' => 'plans:read', 'label' => 'View Plans'],
+            ['module' => 'plans', 'action' => 'write', 'name' => 'plans:write', 'label' => 'Create/Edit Plans'],
+            ['module' => 'plans', 'action' => 'delete', 'name' => 'plans:delete', 'label' => 'Delete Plans'],
         ];
     }
 }

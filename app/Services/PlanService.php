@@ -23,4 +23,12 @@ class PlanService extends BaseService
             'is_active' => !$plan->is_active
         ]);
     }
+
+    /**
+     * Get all active plans for organization users
+     */
+    public function getActivePlans()
+    {
+        return $this->repository->all()->where('is_active', true)->sortBy('sort_order')->values();
+    }
 }

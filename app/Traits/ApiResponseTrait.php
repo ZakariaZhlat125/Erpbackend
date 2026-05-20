@@ -12,7 +12,7 @@ trait ApiResponseTrait
         return response()->json([
             'success' => true,
             'message' => $message ?? __('api.success'),
-            'data'    => $data,
+            'data'    => $data ?? [],
         ], $code);
     }
 
@@ -26,6 +26,7 @@ trait ApiResponseTrait
         return response()->json([
             'success' => true,
             'message' => $message ?? __('api.deleted'),
+            'data'    => [],
         ], Response::HTTP_OK);
     }
 
@@ -34,6 +35,7 @@ trait ApiResponseTrait
         $response = [
             'success' => false,
             'message' => $message ?? __('api.error'),
+            'data'    => [],
         ];
 
         if ($errors !== null) {

@@ -17,7 +17,7 @@ class SubscriptionController extends BaseApiController
     ) {}
 
     #[OA\Get(
-        path: '/api/subscriptions/my-subscription',
+        path: '/subscriptions/my-subscription',
         summary: "Get user's active subscription",
         tags: ['Subscriptions'],
         security: [['sanctum' => []]],
@@ -28,10 +28,10 @@ class SubscriptionController extends BaseApiController
         ]
     )]
     public function mySubscription(): JsonResponse
-    {
+    {   
         $userId = auth()->id();
-        $subscription = $this->subscriptionService->getUserActiveSubscription($userId);
 
+        $subscription = $this->subscriptionService->getUserActiveSubscription($userId);
         if (!$subscription) {
             return $this->notFoundResponse('No active subscription found');
         }
@@ -42,7 +42,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Post(
-        path: '/api/subscriptions/subscribe',
+        path: '/subscriptions/subscribe',
         summary: 'Subscribe to a plan',
         tags: ['Subscriptions'],
         security: [['sanctum' => []]],
@@ -71,7 +71,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Post(
-        path: '/api/subscriptions/subscriptions/{id}/unsubscribe',
+        path: '/subscriptions/{id}/unsubscribe',
         summary: 'Cancel subscription',
         tags: ['Subscriptions'],
         security: [['sanctum' => []]],
@@ -104,7 +104,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Post(
-        path: '/api/subscriptions/subscriptions/{id}/renew',
+        path: '/subscriptions/{id}/renew',
         summary: 'Renew subscription',
         tags: ['Subscriptions'],
         security: [['sanctum' => []]],
@@ -133,7 +133,7 @@ class SubscriptionController extends BaseApiController
     }
 
     #[OA\Get(
-        path: '/api/subscriptions/my-subscription-history',
+        path: '/subscriptions/my-subscription-history',
         summary: 'Get subscription history',
         tags: ['Subscriptions'],
         security: [['sanctum' => []]],
