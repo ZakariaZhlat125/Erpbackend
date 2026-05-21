@@ -36,6 +36,8 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: "Employees", description: "Human resources and employee management")]
 #[OA\Tag(name: "Projects", description: "Project management and tracking")]
 #[OA\Tag(name: "Tasks", description: "Task management and assignment")]
+#[OA\Tag(name: "Currencies", description: "Currency management and exchange rates")]
+#[OA\Tag(name: "Account Services", description: "Account service management")]
 #[OA\Schema(
     schema: "ApiResponse",
     properties: [

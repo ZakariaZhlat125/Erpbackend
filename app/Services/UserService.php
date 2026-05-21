@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Model;
 
 class UserService extends BaseService
 {
@@ -11,7 +12,7 @@ class UserService extends BaseService
         parent::__construct($repository);
     }
 
-    public function create(array $data)
+    public function create(array $data): Model
     {
         $roles = $data['roles'] ?? [];
         unset($data['roles']);
@@ -25,7 +26,7 @@ class UserService extends BaseService
         return $user;
     }
 
-    public function update(int $id, array $data)
+    public function update(int $id, array $data): bool
     {
         $roles = $data['roles'] ?? null;
         unset($data['roles']);
@@ -34,12 +35,15 @@ class UserService extends BaseService
             unset($data['password']);
         }
 
-        $user = parent::update($id, $data);
+        $updated = parent::update($id, $data);
 
-        if ($roles !== null) {
-            $user->syncRoles($roles);
+        if ($updated && $roles !== null) {
+            $user = $this->findById($id);
+            if ($user) {
+                $user->syncRoles($roles);
+            }
         }
 
-        return $user;
+        return $updated;
     }
 }

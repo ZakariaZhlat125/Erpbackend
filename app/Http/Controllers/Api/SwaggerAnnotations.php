@@ -13,5 +13,15 @@ class SwaggerAnnotations
         \App\Swagger\UserSchemas::class,
         \App\Swagger\PlanSchemas::class,
         \App\Swagger\SubscriptionSchemas::class,
+        \App\Swagger\AccountSchemas::class,
+        \App\Swagger\AccountServiceSchemas::class,
+        \App\Swagger\CurrencySchemas::class,
+        \App\Swagger\EmployeeSchemas::class,
+        \App\Swagger\InvoiceSchemas::class,
+        \App\Swagger\PaymentSchemas::class,
+        \App\Swagger\ProductSchemas::class,
+        \App\Swagger\ProjectSchemas::class,
+        \App\Swagger\TaskSchemas::class,
+        \App\Swagger\WarehouseSchemas::class,
     ];
 }
