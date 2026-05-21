@@ -4,7 +4,6 @@ namespace App\Swagger;
 
 use OpenApi\Attributes as OA;
 
-#[OA\Tag(name: "Admin/Users", description: "Admin user management endpoints")]
 #[OA\Schema(
     schema: "User",
     required: ["id", "name", "email"],
@@ -53,6 +52,95 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: "roles", type: "array", items: new OA\Items(type: "string"), example: ["manager"]),
     ]
 )]
+#[OA\Schema(
+    schema: "UserResponse",
+    properties: [
+        new OA\Property(property: "success", type: "boolean", example: true),
+        new OA\Property(property: "message", type: "string", example: "Operation successful"),
+        new OA\Property(property: "data", ref: "#/components/schemas/User"),
+    ]
+)]
+#[OA\Schema(
+    schema: "UserListResponse",
+    properties: [
+        new OA\Property(property: "data", type: "array", items: new OA\Items(ref: "#/components/schemas/User")),
+        new OA\Property(property: "meta", type: "object"),
+    ]
+)]
+
+// --- Admin User endpoints ---
+
+#[OA\Get(
+    path: "/admin/users",
+    summary: "Get all users",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Users"],
+    parameters: [
+        new OA\Parameter(name: "per_page", in: "query", required: false, schema: new OA\Schema(type: "integer", default: 15)),
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Success", content: new OA\JsonContent(ref: "#/components/schemas/UserListResponse")),
+        new OA\Response(response: 401, description: "Unauthorized"),
+    ]
+)]
+#[OA\Post(
+    path: "/admin/users",
+    summary: "Create a new user",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Users"],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: "#/components/schemas/StoreUserRequest")
+    ),
+    responses: [
+        new OA\Response(response: 201, description: "User created", content: new OA\JsonContent(ref: "#/components/schemas/UserResponse")),
+        new OA\Response(response: 422, description: "Validation error"),
+    ]
+)]
+#[OA\Get(
+    path: "/admin/users/{id}",
+    summary: "Get user by ID",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Users"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Success", content: new OA\JsonContent(ref: "#/components/schemas/UserResponse")),
+        new OA\Response(response: 404, description: "User not found"),
+    ]
+)]
+#[OA\Put(
+    path: "/admin/users/{id}",
+    summary: "Update user",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Users"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: "#/components/schemas/UpdateUserRequest")
+    ),
+    responses: [
+        new OA\Response(response: 200, description: "User updated", content: new OA\JsonContent(ref: "#/components/schemas/UserResponse")),
+        new OA\Response(response: 404, description: "User not found"),
+    ]
+)]
+#[OA\Delete(
+    path: "/admin/users/{id}",
+    summary: "Delete user",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Users"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    responses: [
+        new OA\Response(response: 204, description: "User deleted"),
+        new OA\Response(response: 404, description: "User not found"),
+    ]
+)]
 class UserSchemas
 {
+    // User schemas and endpoint documentation.
 }

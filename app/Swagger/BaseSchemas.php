@@ -38,6 +38,11 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: "Tasks", description: "Task management and assignment")]
 #[OA\Tag(name: "Currencies", description: "Currency management and exchange rates")]
 #[OA\Tag(name: "Account Services", description: "Account service management")]
+#[OA\Tag(name: "Plans", description: "Public plan browsing")]
+#[OA\Tag(name: "Subscriptions", description: "User subscription endpoints")]
+#[OA\Tag(name: "Admin/Plans", description: "Admin plan management endpoints")]
+#[OA\Tag(name: "Admin/Users", description: "Admin user management endpoints")]
+#[OA\Tag(name: "Admin/Subscriptions", description: "Admin subscription management endpoints")]
 #[OA\Schema(
     schema: "ApiResponse",
     properties: [

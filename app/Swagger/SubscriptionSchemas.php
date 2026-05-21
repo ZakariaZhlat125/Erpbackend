@@ -4,8 +4,6 @@ namespace App\Swagger;
 
 use OpenApi\Attributes as OA;
 
-#[OA\Tag(name: "Admin/Subscriptions", description: "Admin subscription management endpoints")]
-#[OA\Tag(name: "Subscriptions", description: "User subscription endpoints")]
 #[OA\Schema(
     schema: "Subscription",
     required: ["id", "user_id", "plan_id", "status"],
@@ -108,6 +106,228 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: "is_trial", type: "boolean", example: false),
     ]
 )]
+#[OA\Schema(
+    schema: "SubscriptionResponse",
+    properties: [
+        new OA\Property(property: "success", type: "boolean", example: true),
+        new OA\Property(property: "message", type: "string", example: "Operation successful"),
+        new OA\Property(property: "data", ref: "#/components/schemas/Subscription"),
+    ]
+)]
+#[OA\Schema(
+    schema: "SubscriptionListResponse",
+    properties: [
+        new OA\Property(property: "data", type: "array", items: new OA\Items(ref: "#/components/schemas/Subscription")),
+        new OA\Property(property: "meta", type: "object"),
+    ]
+)]
+
+// --- Admin Subscription endpoints ---
+
+#[OA\Get(
+    path: "/admin/subscriptions",
+    summary: "Get all subscriptions",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Subscriptions"],
+    parameters: [
+        new OA\Parameter(name: "per_page", in: "query", required: false, schema: new OA\Schema(type: "integer", default: 15)),
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Success", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionListResponse")),
+        new OA\Response(response: 401, description: "Unauthorized"),
+    ]
+)]
+#[OA\Post(
+    path: "/admin/subscriptions",
+    summary: "Create a new subscription",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Subscriptions"],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: "#/components/schemas/StoreSubscriptionRequest")
+    ),
+    responses: [
+        new OA\Response(response: 201, description: "Subscription created", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionResponse")),
+        new OA\Response(response: 422, description: "Validation error"),
+    ]
+)]
+#[OA\Get(
+    path: "/admin/subscriptions/{id}",
+    summary: "Get subscription by ID",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Subscriptions"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Success", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionResponse")),
+        new OA\Response(response: 404, description: "Not found"),
+    ]
+)]
+#[OA\Put(
+    path: "/admin/subscriptions/{id}",
+    summary: "Update subscription",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Subscriptions"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: "#/components/schemas/UpdateSubscriptionRequest")
+    ),
+    responses: [
+        new OA\Response(response: 200, description: "Subscription updated", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionResponse")),
+        new OA\Response(response: 404, description: "Not found"),
+    ]
+)]
+#[OA\Delete(
+    path: "/admin/subscriptions/{id}",
+    summary: "Delete subscription",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Subscriptions"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    responses: [
+        new OA\Response(response: 204, description: "Subscription deleted"),
+        new OA\Response(response: 404, description: "Not found"),
+    ]
+)]
+#[OA\Patch(
+    path: "/admin/subscriptions/{id}/change-status",
+    summary: "Change subscription status",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Subscriptions"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: "#/components/schemas/ChangeStatusRequest")
+    ),
+    responses: [
+        new OA\Response(response: 200, description: "Status changed", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionResponse")),
+        new OA\Response(response: 404, description: "Not found"),
+        new OA\Response(response: 422, description: "Validation error"),
+    ]
+)]
+#[OA\Post(
+    path: "/admin/subscriptions/subscribe-user",
+    summary: "Subscribe a user to a plan",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Subscriptions"],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: "#/components/schemas/SubscribeUserRequest")
+    ),
+    responses: [
+        new OA\Response(response: 201, description: "User subscribed", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionResponse")),
+        new OA\Response(response: 422, description: "Validation error"),
+    ]
+)]
+#[OA\Post(
+    path: "/admin/subscriptions/{id}/renew",
+    summary: "Renew subscription",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Subscriptions"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Subscription renewed", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionResponse")),
+        new OA\Response(response: 404, description: "Not found"),
+    ]
+)]
+#[OA\Post(
+    path: "/admin/subscriptions/{id}/cancel",
+    summary: "Cancel subscription",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Subscriptions"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    requestBody: new OA\RequestBody(
+        required: false,
+        content: new OA\JsonContent(ref: "#/components/schemas/UnsubscribeRequest")
+    ),
+    responses: [
+        new OA\Response(response: 200, description: "Subscription cancelled", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionResponse")),
+        new OA\Response(response: 404, description: "Not found"),
+    ]
+)]
+
+// --- User Subscription endpoints ---
+
+#[OA\Get(
+    path: "/subscriptions/my-subscription",
+    summary: "Get user's active subscription",
+    security: [["sanctum" => []]],
+    tags: ["Subscriptions"],
+    responses: [
+        new OA\Response(response: 200, description: "Success", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionResponse")),
+        new OA\Response(response: 404, description: "Not found"),
+        new OA\Response(response: 401, description: "Unauthorized"),
+    ]
+)]
+#[OA\Post(
+    path: "/subscriptions/subscribe",
+    summary: "Subscribe to a plan",
+    security: [["sanctum" => []]],
+    tags: ["Subscriptions"],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: "#/components/schemas/SubscribeRequest")
+    ),
+    responses: [
+        new OA\Response(response: 201, description: "Subscription created", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionResponse")),
+        new OA\Response(response: 422, description: "Validation error"),
+    ]
+)]
+#[OA\Post(
+    path: "/subscriptions/{id}/unsubscribe",
+    summary: "Cancel subscription",
+    security: [["sanctum" => []]],
+    tags: ["Subscriptions"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    requestBody: new OA\RequestBody(
+        required: false,
+        content: new OA\JsonContent(ref: "#/components/schemas/UnsubscribeRequest")
+    ),
+    responses: [
+        new OA\Response(response: 200, description: "Subscription cancelled"),
+        new OA\Response(response: 404, description: "Not found"),
+    ]
+)]
+#[OA\Post(
+    path: "/subscriptions/{id}/renew",
+    summary: "Renew subscription",
+    security: [["sanctum" => []]],
+    tags: ["Subscriptions"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Subscription renewed", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionResponse")),
+        new OA\Response(response: 404, description: "Not found"),
+    ]
+)]
+#[OA\Get(
+    path: "/subscriptions/my-subscription-history",
+    summary: "Get subscription history",
+    security: [["sanctum" => []]],
+    tags: ["Subscriptions"],
+    parameters: [
+        new OA\Parameter(name: "per_page", in: "query", required: false, schema: new OA\Schema(type: "integer", default: 15)),
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Success", content: new OA\JsonContent(ref: "#/components/schemas/SubscriptionListResponse")),
+        new OA\Response(response: 401, description: "Unauthorized"),
+    ]
+)]
 class SubscriptionSchemas
 {
+    // Subscription schemas and endpoint documentation.
 }

@@ -8,7 +8,6 @@ use App\Http\Requests\Admin\Plan\UpdatePlanRequest;
 use App\Http\Resources\PlanResource;
 use App\Services\PlanService;
 use Illuminate\Http\JsonResponse;
-use OpenApi\Attributes as OA;
 
 class PlanController extends BaseApiController
 {
@@ -16,20 +15,6 @@ class PlanController extends BaseApiController
         protected PlanService $planService
     ) {}
 
-    #[OA\Get(
-        path: '/admin/plans',
-        summary: 'Get all plans',
-        tags: ['Admin/Plans'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', default: 1)),
-            new OA\Parameter(name: 'per_page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', default: 15))
-        ],
-        responses: [
-            new OA\Response(response: 200, description: 'Success'),
-            new OA\Response(response: 401, description: 'Unauthorized')
-        ]
-    )]
     public function index(): JsonResponse
     {
         $data = $this->planService->getPaginated(
@@ -39,20 +24,6 @@ class PlanController extends BaseApiController
         return $this->paginatedResponse($data);
     }
 
-    #[OA\Post(
-        path: '/admin/plans',
-        summary: 'Create a new plan',
-        tags: ['Admin/Plans'],
-        security: [['sanctum' => []]],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/StorePlanRequest')
-        ),
-        responses: [
-            new OA\Response(response: 201, description: 'Plan created'),
-            new OA\Response(response: 422, description: 'Validation error')
-        ]
-    )]
     public function store(StorePlanRequest $request): JsonResponse
     {
         $plan = $this->planService->create($request->validated());
@@ -62,19 +33,6 @@ class PlanController extends BaseApiController
         );
     }
 
-    #[OA\Get(
-        path: '/admin/plans/{id}',
-        summary: 'Get plan by ID',
-        tags: ['Admin/Plans'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        responses: [
-            new OA\Response(response: 200, description: 'Success'),
-            new OA\Response(response: 404, description: 'Plan not found')
-        ]
-    )]
     public function show(int $id): JsonResponse
     {
         $plan = $this->planService->findById($id);
@@ -88,24 +46,6 @@ class PlanController extends BaseApiController
         );
     }
 
-    #[OA\Put(
-        path: '/admin/plans/{id}',
-        summary: 'Update plan',
-        tags: ['Admin/Plans'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/UpdatePlanRequest')
-        ),
-        responses: [
-            new OA\Response(response: 200, description: 'Plan updated'),
-            new OA\Response(response: 404, description: 'Plan not found'),
-            new OA\Response(response: 422, description: 'Validation error')
-        ]
-    )]
     public function update(UpdatePlanRequest $request, int $id): JsonResponse
     {
         if (!$this->planService->exists($id)) {
@@ -121,19 +61,6 @@ class PlanController extends BaseApiController
         );
     }
 
-    #[OA\Delete(
-        path: '/admin/plans/{id}',
-        summary: 'Delete plan',
-        tags: ['Admin/Plans'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        responses: [
-            new OA\Response(response: 200, description: 'Plan deleted'),
-            new OA\Response(response: 404, description: 'Plan not found')
-        ]
-    )]
     public function destroy(int $id): JsonResponse
     {
         if (!$this->planService->exists($id)) {
@@ -145,19 +72,6 @@ class PlanController extends BaseApiController
         return $this->noContentResponse();
     }
 
-    #[OA\Patch(
-        path: '/admin/plans/{id}/change-status',
-        summary: 'Toggle plan active status',
-        tags: ['Admin/Plans'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        responses: [
-            new OA\Response(response: 200, description: 'Status updated'),
-            new OA\Response(response: 404, description: 'Plan not found')
-        ]
-    )]
     public function changeStatus(int $id): JsonResponse
     {
         if (!$this->planService->exists($id)) {
@@ -173,19 +87,6 @@ class PlanController extends BaseApiController
         );
     }
 
-    #[OA\Patch(
-        path: '/admin/plans/{id}/toggle-popular',
-        summary: 'Toggle plan popular status',
-        tags: ['Admin/Plans'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        responses: [
-            new OA\Response(response: 200, description: 'Popular status updated'),
-            new OA\Response(response: 404, description: 'Plan not found')
-        ]
-    )]
     public function togglePopular(int $id): JsonResponse
     {
         if (!$this->planService->exists($id)) {

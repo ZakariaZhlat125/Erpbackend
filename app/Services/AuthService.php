@@ -30,7 +30,7 @@ class AuthService extends BaseService
             ]);
         }
 
-        $token = $user->createToken('api-token')->plainTextToken;
+        $token = $user->createToken('api-token', expiresAt: now()->addMinutes(15))->plainTextToken;
 
         return [
             'user' => $user,
@@ -72,7 +72,7 @@ class AuthService extends BaseService
 
             return [$user, $organization];
         });
-        $token = $user->createToken('api-token')->plainTextToken;
+        $token = $user->createToken('api-token', expiresAt: now()->addMinutes(15))->plainTextToken;
 
         return [
             'user' => $user,
@@ -93,15 +93,32 @@ class AuthService extends BaseService
         $user->currentAccessToken()->delete();
     }
 
-    public function refresh(mixed $user): array
+    public function refresh(string $refreshToken): array
     {
-        $user->currentAccessToken()->delete();
+        // Find the token in the database
+        $tokenRecord = \Laravel\Sanctum\PersonalAccessToken::findToken($refreshToken);
 
-        $token = $user->createToken('api-token')->plainTextToken;
+        if (!$tokenRecord) {
+            abort(401, 'Invalid refresh token');
+        }
+
+        // Check if token is expired (optional - you can set a longer expiry for refresh tokens)
+        if ($tokenRecord->expires_at && $tokenRecord->expires_at->isPast()) {
+            $tokenRecord->delete();
+            abort(401, 'Refresh token expired');
+        }
+
+        $user = $tokenRecord->tokenable;
+
+        // Delete the old token
+        $tokenRecord->delete();
+
+        // Create new token
+        $newToken = $user->createToken('api-token', expiresAt: now()->addMinutes(15))->plainTextToken;
 
         return [
-            'accessToken' => $token,
-            'refreshToken' => $token,
+            'accessToken' => $newToken,
+            'refreshToken' => $newToken,
             'expiresIn' => 900,
         ];
     }

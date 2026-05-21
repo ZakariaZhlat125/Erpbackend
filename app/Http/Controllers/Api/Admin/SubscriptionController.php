@@ -8,28 +8,13 @@ use App\Http\Requests\Admin\Subscription\UpdateSubscriptionRequest;
 use App\Http\Resources\SubscriptionResource;
 use App\Services\SubscriptionService;
 use Illuminate\Http\JsonResponse;
-use OpenApi\Attributes as OA;
 
-#[OA\Tag(name: "Admin/Subscriptions", description: "Admin subscription management endpoints")]
 class SubscriptionController extends BaseApiController
 {
     public function __construct(
         protected SubscriptionService $subscriptionService
     ) {}
 
-    #[OA\Get(
-        path: '/admin/subscriptions',
-        summary: 'Get all subscriptions',
-        tags: ['Admin/Subscriptions'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'per_page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', default: 15))
-        ],
-        responses: [
-            new OA\Response(response: 200, description: 'Success'),
-            new OA\Response(response: 401, description: 'Unauthorized')
-        ]
-    )]
     public function index(): JsonResponse
     {
         $data = $this->subscriptionService->getPaginated(
@@ -39,20 +24,6 @@ class SubscriptionController extends BaseApiController
         return $this->paginatedResponse($data);
     }
 
-    #[OA\Post(
-        path: '/admin/subscriptions',
-        summary: 'Create a new subscription',
-        tags: ['Admin/Subscriptions'],
-        security: [['sanctum' => []]],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/StoreSubscriptionRequest')
-        ),
-        responses: [
-            new OA\Response(response: 201, description: 'Subscription created'),
-            new OA\Response(response: 422, description: 'Validation error')
-        ]
-    )]
     public function store(StoreSubscriptionRequest $request): JsonResponse
     {
         $subscription = $this->subscriptionService->create($request->validated());
@@ -62,19 +33,6 @@ class SubscriptionController extends BaseApiController
         );
     }
 
-    #[OA\Get(
-        path: '/admin/subscriptions/{id}',
-        summary: 'Get subscription by ID',
-        tags: ['Admin/Subscriptions'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        responses: [
-            new OA\Response(response: 200, description: 'Success'),
-            new OA\Response(response: 404, description: 'Not found')
-        ]
-    )]
     public function show(int $id): JsonResponse
     {
         $subscription = $this->subscriptionService->findById($id);
@@ -88,23 +46,6 @@ class SubscriptionController extends BaseApiController
         );
     }
 
-    #[OA\Put(
-        path: '/admin/subscriptions/{id}',
-        summary: 'Update subscription',
-        tags: ['Admin/Subscriptions'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/UpdateSubscriptionRequest')
-        ),
-        responses: [
-            new OA\Response(response: 200, description: 'Subscription updated'),
-            new OA\Response(response: 404, description: 'Not found')
-        ]
-    )]
     public function update(UpdateSubscriptionRequest $request, int $id): JsonResponse
     {
         if (!$this->subscriptionService->exists($id)) {
@@ -120,19 +61,6 @@ class SubscriptionController extends BaseApiController
         );
     }
 
-    #[OA\Delete(
-        path: '/admin/subscriptions/{id}',
-        summary: 'Delete subscription',
-        tags: ['Admin/Subscriptions'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        responses: [
-            new OA\Response(response: 204, description: 'Subscription deleted'),
-            new OA\Response(response: 404, description: 'Not found')
-        ]
-    )]
     public function destroy(int $id): JsonResponse
     {
         if (!$this->subscriptionService->exists($id)) {
@@ -144,24 +72,6 @@ class SubscriptionController extends BaseApiController
         return $this->noContentResponse();
     }
 
-    #[OA\Patch(
-        path: '/admin/subscriptions/subscriptions/{id}/change-status',
-        summary: 'Change subscription status',
-        tags: ['Admin/Subscriptions'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/ChangeStatusRequest')
-        ),
-        responses: [
-            new OA\Response(response: 200, description: 'Status changed'),
-            new OA\Response(response: 404, description: 'Not found'),
-            new OA\Response(response: 422, description: 'Validation error')
-        ]
-    )]
     public function changeStatus(int $id): JsonResponse
     {
         if (!$this->subscriptionService->exists($id)) {
@@ -183,20 +93,6 @@ class SubscriptionController extends BaseApiController
         );
     }
 
-    #[OA\Post(
-        path: '/admin/subscriptions/subscriptions/subscribe-user',
-        summary: 'Subscribe a user to a plan',
-        tags: ['Admin/Subscriptions'],
-        security: [['sanctum' => []]],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/SubscribeUserRequest')
-        ),
-        responses: [
-            new OA\Response(response: 201, description: 'User subscribed'),
-            new OA\Response(response: 422, description: 'Validation error')
-        ]
-    )]
     public function subscribeUser(): JsonResponse
     {
         request()->validate([
@@ -217,19 +113,6 @@ class SubscriptionController extends BaseApiController
         );
     }
 
-    #[OA\Post(
-        path: '/admin/subscriptions/subscriptions/{id}/renew',
-        summary: 'Renew subscription',
-        tags: ['Admin/Subscriptions'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        responses: [
-            new OA\Response(response: 200, description: 'Subscription renewed'),
-            new OA\Response(response: 404, description: 'Not found')
-        ]
-    )]
     public function renewSubscription(int $id): JsonResponse
     {
         if (!$this->subscriptionService->exists($id)) {
@@ -244,23 +127,6 @@ class SubscriptionController extends BaseApiController
         );
     }
 
-    #[OA\Post(
-        path: '/admin/subscriptions/subscriptions/{id}/cancel',
-        summary: 'Cancel subscription',
-        tags: ['Admin/Subscriptions'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
-        ],
-        requestBody: new OA\RequestBody(
-            required: false,
-            content: new OA\JsonContent(ref: '#/components/schemas/UnsubscribeRequest')
-        ),
-        responses: [
-            new OA\Response(response: 200, description: 'Subscription cancelled'),
-            new OA\Response(response: 404, description: 'Not found')
-        ]
-    )]
     public function cancelSubscription(int $id): JsonResponse
     {
         if (!$this->subscriptionService->exists($id)) {

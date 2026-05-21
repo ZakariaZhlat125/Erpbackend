@@ -9,6 +9,7 @@ Route::prefix('auth')->name('api.auth.')->group(function () {
     Route::post('register-company', [AuthController::class, 'registerCompany']);
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('reset-password', [AuthController::class, 'resetPassword']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
 });
 
 // Protected routes (require authentication)
@@ -18,7 +19,6 @@ Route::middleware(['auth:sanctum'])->name('api.')->group(function () {
     Route::prefix('auth')->name('auth.')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
-        Route::post('refresh', [AuthController::class, 'refresh']);
     });
     
     // Users
