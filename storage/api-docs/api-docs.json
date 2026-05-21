@@ -1146,100 +1146,9 @@
                 "tags": [
                     "Currencies"
                 ],
-                "summary": "List currencies",
-                "description": "Returns paginated list of currencies. Pass active_only query parameter to get only active currencies.",
+                "summary": "List active currencies",
+                "description": "Returns list of all active currencies for the organization",
                 "operationId": "4af16012244bfd0cee03acf0ad4b2635",
-                "parameters": [
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "Items per page",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": 15
-                        }
-                    },
-                    {
-                        "name": "active_only",
-                        "in": "query",
-                        "description": "Return only active currencies",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CurrencyListResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            },
-            "post": {
-                "tags": [
-                    "Currencies"
-                ],
-                "summary": "Create new currency",
-                "operationId": "96b087dad5742d7c33019b9fc3dde5e2",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/CurrencyStoreRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Currency created successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/CurrencyResponse"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation error"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    }
-                },
-                "security": [
-                    {
-                        "sanctum": []
-                    }
-                ]
-            }
-        },
-        "/currencies/active": {
-            "get": {
-                "tags": [
-                    "Currencies"
-                ],
-                "summary": "Get active currencies",
-                "description": "Returns list of all active currencies",
-                "operationId": "49b62b686c1a78f1820b8021bb343df9",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1391,13 +1300,138 @@
                         "sanctum": []
                     }
                 ]
+            }
+        },
+        "/admin/currencies": {
+            "get": {
+                "tags": [
+                    "Admin/Currencies"
+                ],
+                "summary": "List all currencies (paginated)",
+                "description": "Returns paginated list of all currencies for admin management",
+                "operationId": "d31206a6e541f431c4c48142bf979187",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrencyListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin/Currencies"
+                ],
+                "summary": "Create new currency",
+                "operationId": "70e0f679ed3bb65b466f5c101e5e952d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CurrencyStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Currency created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrencyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/admin/currencies/{id}": {
+            "get": {
+                "tags": [
+                    "Admin/Currencies"
+                ],
+                "summary": "Get currency by ID",
+                "operationId": "938138a749d899ad0af78962b1a9e2f1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Currency ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrencyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Currency not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
-                    "Currencies"
+                    "Admin/Currencies"
                 ],
                 "summary": "Update currency",
-                "operationId": "d4d3aea0ff3c1cda97e038e6466e00b7",
+                "operationId": "62cf693527b0a8d6d4847d1080ff44ec",
                 "parameters": [
                     {
                         "name": "id",
@@ -1448,10 +1482,10 @@
             },
             "delete": {
                 "tags": [
-                    "Currencies"
+                    "Admin/Currencies"
                 ],
                 "summary": "Delete currency",
-                "operationId": "10c0339853be71ea404a9c7abae8e3c0",
+                "operationId": "3cc976e36a2d90f3e32bb521c76650b5",
                 "parameters": [
                     {
                         "name": "id",
@@ -1481,14 +1515,14 @@
                 ]
             }
         },
-        "/currencies/{id}/set-base": {
+        "/admin/currencies/{id}/set-base": {
             "post": {
                 "tags": [
-                    "Currencies"
+                    "Admin/Currencies"
                 ],
                 "summary": "Set currency as base",
                 "description": "Set the specified currency as the base currency",
-                "operationId": "732a8aeea601e8bd05de5a009b0623aa",
+                "operationId": "a6cadc630d170e17b58156b326b27d9d",
                 "parameters": [
                     {
                         "name": "id",
@@ -1528,14 +1562,14 @@
                 ]
             }
         },
-        "/currencies/{id}/update-rate": {
+        "/admin/currencies/{id}/update-rate": {
             "post": {
                 "tags": [
-                    "Currencies"
+                    "Admin/Currencies"
                 ],
                 "summary": "Update exchange rate",
                 "description": "Update the exchange rate for the specified currency",
-                "operationId": "52653698e2470153972f28accc14227a",
+                "operationId": "64e7fb3f209800af87a88bacafe0dc29",
                 "parameters": [
                     {
                         "name": "id",
@@ -1585,14 +1619,14 @@
                 ]
             }
         },
-        "/currencies/{id}/toggle-active": {
+        "/admin/currencies/{id}/toggle-active": {
             "post": {
                 "tags": [
-                    "Currencies"
+                    "Admin/Currencies"
                 ],
                 "summary": "Toggle currency active status",
                 "description": "Activate or deactivate a currency",
-                "operationId": "25948257968fc5b2b22e974e144b73bc",
+                "operationId": "3c514916b4f6a40fe7efc435cf2bde90",
                 "parameters": [
                     {
                         "name": "id",
@@ -10880,6 +10914,10 @@
         {
             "name": "Admin/Subscriptions",
             "description": "Admin subscription management endpoints"
+        },
+        {
+            "name": "Admin/Currencies",
+            "description": "Admin currency management endpoints"
         }
     ]
 }

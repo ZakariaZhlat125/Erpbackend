@@ -96,37 +96,12 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: "exchange_rate", type: "number", format: "float", example: 1.350000),
     ]
 )]
+// --- Organization Currency endpoints (read-only) ---
+
 #[OA\Get(
     path: "/currencies",
-    summary: "List currencies",
-    description: "Returns paginated list of currencies. Pass active_only query parameter to get only active currencies.",
-    security: [["sanctum" => []]],
-    tags: ["Currencies"],
-    parameters: [
-        new OA\Parameter(name: "per_page", in: "query", description: "Items per page", required: false, schema: new OA\Schema(type: "integer", example: 15)),
-        new OA\Parameter(name: "active_only", in: "query", description: "Return only active currencies", required: false, schema: new OA\Schema(type: "boolean")),
-    ],
-    responses: [
-        new OA\Response(response: 200, description: "Successful operation", content: new OA\JsonContent(ref: "#/components/schemas/CurrencyListResponse")),
-        new OA\Response(response: 401, description: "Unauthenticated"),
-    ]
-)]
-#[OA\Post(
-    path: "/currencies",
-    summary: "Create new currency",
-    security: [["sanctum" => []]],
-    tags: ["Currencies"],
-    requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(ref: "#/components/schemas/CurrencyStoreRequest")),
-    responses: [
-        new OA\Response(response: 201, description: "Currency created successfully", content: new OA\JsonContent(ref: "#/components/schemas/CurrencyResponse")),
-        new OA\Response(response: 422, description: "Validation error"),
-        new OA\Response(response: 401, description: "Unauthenticated"),
-    ]
-)]
-#[OA\Get(
-    path: "/currencies/active",
-    summary: "Get active currencies",
-    description: "Returns list of all active currencies",
+    summary: "List active currencies",
+    description: "Returns list of all active currencies for the organization",
     security: [["sanctum" => []]],
     tags: ["Currencies"],
     responses: [
@@ -178,11 +153,54 @@ use OpenApi\Attributes as OA;
         new OA\Response(response: 401, description: "Unauthenticated"),
     ]
 )]
+
+// --- Admin Currency endpoints (full CRUD) ---
+
+#[OA\Get(
+    path: "/admin/currencies",
+    summary: "List all currencies (paginated)",
+    description: "Returns paginated list of all currencies for admin management",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Currencies"],
+    parameters: [
+        new OA\Parameter(name: "per_page", in: "query", description: "Items per page", required: false, schema: new OA\Schema(type: "integer", example: 15)),
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Successful operation", content: new OA\JsonContent(ref: "#/components/schemas/CurrencyListResponse")),
+        new OA\Response(response: 401, description: "Unauthenticated"),
+    ]
+)]
+#[OA\Post(
+    path: "/admin/currencies",
+    summary: "Create new currency",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Currencies"],
+    requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(ref: "#/components/schemas/CurrencyStoreRequest")),
+    responses: [
+        new OA\Response(response: 201, description: "Currency created successfully", content: new OA\JsonContent(ref: "#/components/schemas/CurrencyResponse")),
+        new OA\Response(response: 422, description: "Validation error"),
+        new OA\Response(response: 401, description: "Unauthenticated"),
+    ]
+)]
+#[OA\Get(
+    path: "/admin/currencies/{id}",
+    summary: "Get currency by ID",
+    security: [["sanctum" => []]],
+    tags: ["Admin/Currencies"],
+    parameters: [
+        new OA\Parameter(name: "id", in: "path", description: "Currency ID", required: true, schema: new OA\Schema(type: "integer")),
+    ],
+    responses: [
+        new OA\Response(response: 200, description: "Successful operation", content: new OA\JsonContent(ref: "#/components/schemas/CurrencyResponse")),
+        new OA\Response(response: 404, description: "Currency not found"),
+        new OA\Response(response: 401, description: "Unauthenticated"),
+    ]
+)]
 #[OA\Put(
-    path: "/currencies/{id}",
+    path: "/admin/currencies/{id}",
     summary: "Update currency",
     security: [["sanctum" => []]],
-    tags: ["Currencies"],
+    tags: ["Admin/Currencies"],
     parameters: [
         new OA\Parameter(name: "id", in: "path", description: "Currency ID", required: true, schema: new OA\Schema(type: "integer")),
     ],
@@ -195,10 +213,10 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Delete(
-    path: "/currencies/{id}",
+    path: "/admin/currencies/{id}",
     summary: "Delete currency",
     security: [["sanctum" => []]],
-    tags: ["Currencies"],
+    tags: ["Admin/Currencies"],
     parameters: [
         new OA\Parameter(name: "id", in: "path", description: "Currency ID", required: true, schema: new OA\Schema(type: "integer")),
     ],
@@ -209,11 +227,11 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Post(
-    path: "/currencies/{id}/set-base",
+    path: "/admin/currencies/{id}/set-base",
     summary: "Set currency as base",
     description: "Set the specified currency as the base currency",
     security: [["sanctum" => []]],
-    tags: ["Currencies"],
+    tags: ["Admin/Currencies"],
     parameters: [
         new OA\Parameter(name: "id", in: "path", description: "Currency ID", required: true, schema: new OA\Schema(type: "integer")),
     ],
@@ -225,11 +243,11 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Post(
-    path: "/currencies/{id}/update-rate",
+    path: "/admin/currencies/{id}/update-rate",
     summary: "Update exchange rate",
     description: "Update the exchange rate for the specified currency",
     security: [["sanctum" => []]],
-    tags: ["Currencies"],
+    tags: ["Admin/Currencies"],
     parameters: [
         new OA\Parameter(name: "id", in: "path", description: "Currency ID", required: true, schema: new OA\Schema(type: "integer")),
     ],
@@ -242,11 +260,11 @@ use OpenApi\Attributes as OA;
     ]
 )]
 #[OA\Post(
-    path: "/currencies/{id}/toggle-active",
+    path: "/admin/currencies/{id}/toggle-active",
     summary: "Toggle currency active status",
     description: "Activate or deactivate a currency",
     security: [["sanctum" => []]],
-    tags: ["Currencies"],
+    tags: ["Admin/Currencies"],
     parameters: [
         new OA\Parameter(name: "id", in: "path", description: "Currency ID", required: true, schema: new OA\Schema(type: "integer")),
     ],

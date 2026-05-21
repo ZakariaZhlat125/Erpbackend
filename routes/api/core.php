@@ -34,19 +34,24 @@ Route::middleware(['auth:sanctum'])->name('api.')->group(function () {
         // Route::put('{role}/permissions', [RoleController::class, 'updatePermissions']);
     });
     
-    // Currencies
+    // Currencies (Organization - read-only)
     Route::prefix('currencies')->name('currencies.')->group(function () {
         Route::get('/', [App\Http\Controllers\Api\CurrencyController::class, 'index'])->name('index');
-        Route::post('/', [App\Http\Controllers\Api\CurrencyController::class, 'store'])->name('store');
-        Route::get('/active', [App\Http\Controllers\Api\CurrencyController::class, 'active'])->name('active');
         Route::get('/base', [App\Http\Controllers\Api\CurrencyController::class, 'getBase'])->name('base');
         Route::post('/convert', [App\Http\Controllers\Api\CurrencyController::class, 'convert'])->name('convert');
         Route::get('/{id}', [App\Http\Controllers\Api\CurrencyController::class, 'show'])->name('show');
-        Route::put('/{id}', [App\Http\Controllers\Api\CurrencyController::class, 'update'])->name('update');
-        Route::delete('/{id}', [App\Http\Controllers\Api\CurrencyController::class, 'destroy'])->name('destroy');
-        Route::post('/{id}/set-base', [App\Http\Controllers\Api\CurrencyController::class, 'setBase'])->name('set-base');
-        Route::post('/{id}/update-rate', [App\Http\Controllers\Api\CurrencyController::class, 'updateRate'])->name('update-rate');
-        Route::post('/{id}/toggle-active', [App\Http\Controllers\Api\CurrencyController::class, 'toggleActive'])->name('toggle-active');
+    });
+
+    // Currencies (Admin - full CRUD)
+    Route::prefix('admin/currencies')->name('admin.currencies.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Api\Admin\CurrencyController::class, 'index'])->name('index');
+        Route::post('/', [App\Http\Controllers\Api\Admin\CurrencyController::class, 'store'])->name('store');
+        Route::get('/{id}', [App\Http\Controllers\Api\Admin\CurrencyController::class, 'show'])->name('show');
+        Route::put('/{id}', [App\Http\Controllers\Api\Admin\CurrencyController::class, 'update'])->name('update');
+        Route::delete('/{id}', [App\Http\Controllers\Api\Admin\CurrencyController::class, 'destroy'])->name('destroy');
+        Route::post('/{id}/set-base', [App\Http\Controllers\Api\Admin\CurrencyController::class, 'setBase'])->name('set-base');
+        Route::post('/{id}/update-rate', [App\Http\Controllers\Api\Admin\CurrencyController::class, 'updateRate'])->name('update-rate');
+        Route::post('/{id}/toggle-active', [App\Http\Controllers\Api\Admin\CurrencyController::class, 'toggleActive'])->name('toggle-active');
     });
     
     // Settings
