@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\WarehouseController;
+use App\Http\Controllers\Api\StockTransferController;
+use App\Http\Controllers\Api\InventoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->prefix('inventory')->name('api.inventory.')->group(function () {
@@ -67,9 +69,36 @@ Route::middleware(['auth:sanctum'])->prefix('inventory')->name('api.inventory.')
     });
     
     // Stock Transfers
-    Route::prefix('stock-transfers')->name('stock-transfers.')->group(function () {
-        // Implement StockTransferController endpoints
-        // Route::post('/', [StockTransferController::class, 'store']);
+    Route::prefix('stock-transfers')->name('stock-transfers.')->middleware('permission:stock:read')->group(function () {
+        Route::get('/', [StockTransferController::class, 'index'])->name('index');
+        Route::get('/{id}', [StockTransferController::class, 'show'])->name('show');
+        
+        Route::middleware('permission:stock:adjust')->group(function () {
+            Route::post('/', [StockTransferController::class, 'store'])->name('store');
+            Route::put('/{id}', [StockTransferController::class, 'update'])->name('update');
+            Route::post('/{id}/submit', [StockTransferController::class, 'submit'])->name('submit');
+            Route::post('/{id}/ship', [StockTransferController::class, 'ship'])->name('ship');
+            Route::post('/{id}/receive', [StockTransferController::class, 'receive'])->name('receive');
+            Route::post('/{id}/cancel', [StockTransferController::class, 'cancel'])->name('cancel');
+        });
+        
+        Route::post('/{id}/approve', [StockTransferController::class, 'approve'])
+            ->name('approve')
+            ->middleware('permission:stock:approve_count');
+    });
+
+    // Serial Numbers & Batches
+    Route::prefix('serials')->name('serials.')->middleware('permission:stock:read')->group(function () {
+        Route::get('/', [InventoryController::class, 'serials'])->name('index');
+        Route::get('/available', [InventoryController::class, 'availableSerials'])->name('available');
+        Route::get('/{serial}', [InventoryController::class, 'serialDetails'])->name('show');
+    });
+
+    Route::prefix('batches')->name('batches.')->middleware('permission:stock:read')->group(function () {
+        Route::get('/', [InventoryController::class, 'batches'])->name('index');
+        Route::get('/expiring', [InventoryController::class, 'expiringBatches'])->name('expiring');
+        Route::get('/available', [InventoryController::class, 'availableBatches'])->name('available');
+        Route::get('/{batch}', [InventoryController::class, 'batchDetails'])->name('show');
     });
     
     // Stock Counts (Physical Inventory)

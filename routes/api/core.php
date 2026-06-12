@@ -76,8 +76,14 @@ Route::middleware(['auth:sanctum'])->name('api.')->group(function () {
     });
     
     // Activity Logs (Audit)
-    Route::prefix('activity-logs')->name('activity-logs.')->group(function () {
-        // Implement ActivityLogController endpoints
-        // Route::get('/', [ActivityLogController::class, 'index']);
+    Route::prefix('activity-logs')->name('activity-logs.')->middleware('permission:audit:read')->group(function () {
+        Route::get('/', [App\Http\Controllers\Api\ActivityLogController::class, 'index'])->name('index');
+        Route::get('/statistics', [App\Http\Controllers\Api\ActivityLogController::class, 'statistics'])->name('statistics');
+        Route::get('/sensitive', [App\Http\Controllers\Api\ActivityLogController::class, 'sensitive'])->name('sensitive');
+        Route::get('/actions', [App\Http\Controllers\Api\ActivityLogController::class, 'actions'])->name('actions');
+        Route::get('/subject-types', [App\Http\Controllers\Api\ActivityLogController::class, 'subjectTypes'])->name('subject-types');
+        Route::get('/by-actor/{actorId}', [App\Http\Controllers\Api\ActivityLogController::class, 'byActor'])->name('by-actor');
+        Route::get('/by-subject/{subjectType}/{subjectId}', [App\Http\Controllers\Api\ActivityLogController::class, 'bySubject'])->name('by-subject');
+        Route::get('/{id}', [App\Http\Controllers\Api\ActivityLogController::class, 'show'])->name('show');
     });
 });

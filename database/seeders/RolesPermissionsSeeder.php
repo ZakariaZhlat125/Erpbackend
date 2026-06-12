@@ -61,6 +61,7 @@ class RolesPermissionsSeeder extends Seeder
             'time_entries:read', 'time_entries:write',
             'settings:read', 'settings:write',
             'audit:read',
+            'workflows:read', 'workflows:write', 'workflows:delete',
             'plans:read', 'plans:write', 'plans:delete',
         ]);
 
@@ -89,6 +90,7 @@ class RolesPermissionsSeeder extends Seeder
             'time_entries:read', 'time_entries:write',
             'settings:read', 'settings:write',
             'audit:read',
+            'workflows:read', 'workflows:write',
             'plans:read',
         ]);
 
@@ -218,6 +220,10 @@ class RolesPermissionsSeeder extends Seeder
             ['module' => 'settings', 'action' => 'write', 'name' => 'settings:write', 'label' => 'Modify Settings'],
             
             ['module' => 'audit', 'action' => 'read', 'name' => 'audit:read', 'label' => 'View Audit Logs'],
+
+            ['module' => 'workflows', 'action' => 'read', 'name' => 'workflows:read', 'label' => 'View Workflows'],
+            ['module' => 'workflows', 'action' => 'write', 'name' => 'workflows:write', 'label' => 'Create/Edit Workflows'],
+            ['module' => 'workflows', 'action' => 'delete', 'name' => 'workflows:delete', 'label' => 'Delete Workflows'],
 
             ['module' => 'plans', 'action' => 'read', 'name' => 'plans:read', 'label' => 'View Plans'],
             ['module' => 'plans', 'action' => 'write', 'name' => 'plans:write', 'label' => 'Create/Edit Plans'],

@@ -3,6 +3,9 @@
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\JournalController;
+use App\Http\Controllers\Api\CostCenterController;
+use App\Http\Controllers\Api\TaxRateController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->prefix('accounting')->name('api.accounting.')->group(function () {
@@ -17,8 +20,26 @@ Route::middleware(['auth:sanctum'])->prefix('accounting')->name('api.accounting.
     
     // Tax Rates
     Route::prefix('tax-rates')->name('tax-rates.')->group(function () {
-        // Implement TaxRateController endpoints
-        // Route::apiResource('/', TaxRateController::class);
+        Route::get('/for-sales', [TaxRateController::class, 'forSales'])->name('for-sales');
+        Route::get('/for-purchase', [TaxRateController::class, 'forPurchase'])->name('for-purchase');
+        Route::post('/calculate', [TaxRateController::class, 'calculate'])->name('calculate');
+        Route::post('/seed-defaults', [TaxRateController::class, 'seedDefaults'])->name('seed-defaults');
+        Route::get('/', [TaxRateController::class, 'index'])->name('index');
+        Route::post('/', [TaxRateController::class, 'store'])->name('store');
+        Route::get('/{id}', [TaxRateController::class, 'show'])->name('show');
+        Route::put('/{id}', [TaxRateController::class, 'update'])->name('update');
+        Route::delete('/{id}', [TaxRateController::class, 'destroy'])->name('destroy');
+    });
+
+    // Cost Centers
+    Route::prefix('cost-centers')->name('cost-centers.')->group(function () {
+        Route::get('/tree', [CostCenterController::class, 'tree'])->name('tree');
+        Route::get('/{id}/statistics', [CostCenterController::class, 'statistics'])->name('statistics');
+        Route::get('/', [CostCenterController::class, 'index'])->name('index');
+        Route::post('/', [CostCenterController::class, 'store'])->name('store');
+        Route::get('/{id}', [CostCenterController::class, 'show'])->name('show');
+        Route::put('/{id}', [CostCenterController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CostCenterController::class, 'destroy'])->name('destroy');
     });
     
     // Invoices
@@ -66,9 +87,23 @@ Route::middleware(['auth:sanctum'])->prefix('accounting')->name('api.accounting.
         ->middleware('permission:payments:read');
     
     // Journal Batches & Lines
-    Route::prefix('journal-batches')->name('journal-batches.')->group(function () {
-        // Implement JournalBatchController endpoints
-        // Route::apiResource('/', JournalBatchController::class);
+    Route::prefix('journals')->name('journals.')->middleware('permission:journals:read')->group(function () {
+        Route::get('/trial-balance', [JournalController::class, 'trialBalance'])->name('trial-balance');
+        Route::get('/account-statement/{accountId}', [JournalController::class, 'accountStatement'])->name('account-statement');
+        Route::get('/', [JournalController::class, 'index'])->name('index');
+        Route::get('/{id}', [JournalController::class, 'show'])->name('show');
+        
+        Route::middleware('permission:journals:write')->group(function () {
+            Route::post('/', [JournalController::class, 'store'])->name('store');
+            Route::put('/{id}', [JournalController::class, 'update'])->name('update');
+            Route::delete('/{id}', [JournalController::class, 'destroy'])->name('destroy');
+        });
+        
+        Route::middleware('permission:journals:post')->group(function () {
+            Route::post('/{id}/post', [JournalController::class, 'post'])->name('post');
+            Route::post('/{id}/void', [JournalController::class, 'void'])->name('void');
+            Route::post('/{id}/reverse', [JournalController::class, 'reverse'])->name('reverse');
+        });
     });
     
     // Accounting Reports

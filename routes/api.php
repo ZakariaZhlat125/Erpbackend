@@ -32,3 +32,11 @@ require __DIR__.'/api/users.php';
 require __DIR__.'/api/plans.php';
 
 require __DIR__.'/api/subscriptions.php';
+
+require __DIR__.'/api/activity_logs.php';
+
+// Workflow Engine: Approvals, Workflow Management
+require __DIR__.'/api/workflows.php';
+
+// Timeline: Comments, Attachments, Activity History
+require __DIR__.'/api/timeline.php';
